@@ -63,8 +63,8 @@ export const registrarUsuario = (req, res) => {
 export const actualizarUsuario = (req, res) => {
     try {
         const id = parseInt(req.params.idUsuario);
-
-        if (id === 1) {
+        
+        if (id === 0) {
             return res.status(403).json({ message: "Prohibido actualizar el usuario con ID 1." });
         }
 
@@ -82,10 +82,11 @@ export const actualizarUsuario = (req, res) => {
     }
 };
 
+
 export const borrarUsuario = (req, res) => {
     try {
         const id = parseInt(req.params.idUsuario);
-        if (id === 1) {
+        if (id === 0) {
             return res.status(403).json({ message: "Prohibido eliminar el usuario con ID 1." });
         }
 
