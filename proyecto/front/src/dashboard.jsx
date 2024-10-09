@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-
-const Dashboard = () => {
+import { useNavigate } from "react-router-dom"; 
+const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
   const [editingData, setEditingData] = useState(null); 
   const [formData, setFormData] = useState({
@@ -66,7 +66,13 @@ const Dashboard = () => {
     cod_postal: "",
     materias_adeuda: ""
   });
+  const navigate = useNavigate(); // Hook para redirigir a login
 
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    onLogout(); // Llama a la función para actualizar el estado de autenticación en App.jsx
+    navigate("/login"); // Redirigir a la página de login
+  };
   useEffect(() => {
     axios.get("http://localhost:3001/proyecto/datos")
       .then(response => {
@@ -171,7 +177,7 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Dashboard alumnos</h1>
-
+      <button onClick={handleLogout}>Cerrar sesión</button>
       <button onClick={exportToPDF}>Exportar a PDF</button>
 
       <div>
