@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom"; 
+import './dashboard.css';
 const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
   const [editingData, setEditingData] = useState(null); 
