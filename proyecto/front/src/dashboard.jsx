@@ -1,41 +1,44 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
-  const [editingData, setEditingData] = useState(null); 
-  const [showTable, setShowTable] = useState(false); 
-  const [showList, setShowList] = useState(false); 
+  const [editingData, setEditingData] = useState(null);
+  const [showTable, setShowTable] = useState(false);
+  const [showList, setShowList] = useState(false);
   const [formData, setFormData] = useState({
-    marca_temporal: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
+    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
     establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: ""
+    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
   });
 
   const [newData, setNewData] = useState({
-    marca_temporal: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
+    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
     establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: ""
+    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
   });
-  
+
 
   const [filterDNI, setFilterDNI] = useState("");
   const [filterCurso, setFilterCurso] = useState("");
   const [filterNombreApellido, setFilterNombreApellido] = useState("");
-  
-  const navigate = useNavigate(); 
+  const [expandedRow, setExpandedRow] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    onLogout(); 
+    onLogout();
     navigate("/login");
+  };
+  const toggleRow = (id) => {
+    setExpandedRow(expandedRow === id ? null : id);
   };
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const Dashboard = ({ onLogout }) => {
 
   const handleEdit = (dato) => {
     setEditingData(dato);
-    setFormData(dato); 
+    setFormData(dato);
   };
 
   const handleFormChange = (e) => {
@@ -73,7 +76,7 @@ const Dashboard = ({ onLogout }) => {
     axios.put(`http://localhost:3001/proyecto/actualizarUsuario/${editingData.id}`, formData)
       .then(response => {
         setDatos(datos.map(dato => (dato.id === editingData.id ? { ...dato, ...formData } : dato)));
-        setEditingData(null); 
+        setEditingData(null);
       })
       .catch(error => {
         console.error("Error al actualizar el dato:", error);
@@ -86,20 +89,20 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const handleDNIChange = (e) => {
-    const value = e.target.value.trim(); 
+    const value = e.target.value.trim();
     setFilterDNI(value);
   };
 
   const handleNewDataSubmit = () => {
     axios.post("http://localhost:3001/proyecto/registrarUsuario", newData)
       .then(response => {
-        setDatos([...datos, response.data.data]); 
+        setDatos([...datos, response.data.data]);
         setNewData({
-          marca_temporal: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
+          marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
           apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
           establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
           medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-          nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: ""
+          nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
         });
       })
       .catch(error => {
@@ -124,17 +127,17 @@ const Dashboard = ({ onLogout }) => {
 
   const filteredData = () => {
     return datos.filter((dato) => {
-      const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true; 
+      const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true;
       const matchesCurso = filterCurso ? dato.curso.includes(filterCurso) : true;
-      const matchesNombreApellido = filterNombreApellido ? 
+      const matchesNombreApellido = filterNombreApellido ?
         `${dato.nombre} ${dato.apellido}`.toLowerCase().includes(filterNombreApellido.toLowerCase()) : true;
       return matchesDNI && matchesCurso && matchesNombreApellido;
     });
   };
-  
+
 
   return (
-    <div className="container-fluid mt-1"> 
+    <div className="container-fluid mt-1">
       <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
       <button className="btn btn-success" onClick={exportToPDF}>Exportar a PDF</button>
 
@@ -143,30 +146,30 @@ const Dashboard = ({ onLogout }) => {
         {showTable ? "Ocultar Ingreso de Datos" : "Mostrar Ingreso de Datos"}
       </button>
 
-      {showTable && ( 
+      {showTable && (
         <div>
           <div className="row g-0">
-          {Object.keys(newData).map((key, index) => (
-    <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
-      {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
-        <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
-          <option value="">Seleccione {key.replace(/_/g, " ")}</option>
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
-        </select>
-      ) : (
-        <input
-          type="text"
-          className="form-control"
-          name={key}
-          value={newData[key]}
-          onChange={handleNewDataChange}
-          placeholder={key.replace(/_/g, " ")}
-        />
-      )}
-    </div>
-  ))}
-</div>
+            {Object.keys(newData).map((key, index) => (
+              <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
+                {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
+                  <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
+                    <option value="">Seleccione {key.replace(/_/g, " ")}</option>
+                    <option value="Sí">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    className="form-control"
+                    name={key}
+                    value={newData[key]}
+                    onChange={handleNewDataChange}
+                    placeholder={key.replace(/_/g, " ")}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit}>Agregar Dato</button>
         </div>
       )}
@@ -175,40 +178,38 @@ const Dashboard = ({ onLogout }) => {
         {showList ? "Ocultar Lista de Datos" : "Mostrar Lista de Datos"}
       </button>
 
-      {showList && ( 
+      {showList && (
         <div>
           <h2>Lista de Datos</h2>
-          
-          
-          
-<div className="d-flex mb-3">
-<input 
-  type="text" 
-  placeholder="Filtrar por DNI" 
-  className="form-control mx-1" 
-  value={filterDNI} 
-  onChange={handleDNIChange} 
-/>
-  <input 
-    type="text" 
-    placeholder="Filtrar por Curso" 
-    className="form-control mx-1" 
-    value={filterCurso} 
-    onChange={(e) => setFilterCurso(e.target.value)} 
-  />
-  <input 
-    type="text" 
-    placeholder="Filtrar por Nombre y Apellido" 
-    className="form-control mx-1" 
-    value={filterNombreApellido} 
-    onChange={(e) => setFilterNombreApellido(e.target.value)} 
-  />
-</div>
 
+          <div className="d-flex mb-3">
+            <input
+              type="text"
+              placeholder="Filtrar por DNI"
+              className="form-control mx-1"
+              value={filterDNI}
+              onChange={handleDNIChange}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Curso"
+              className="form-control mx-1"
+              value={filterCurso}
+              onChange={(e) => setFilterCurso(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Nombre y Apellido"
+              className="form-control mx-1"
+              value={filterNombreApellido}
+              onChange={(e) => setFilterNombreApellido(e.target.value)}
+            />
+          </div>
 
           <table className="table table-responsive">
             <thead>
               <tr>
+              <th>foto</th>
                 <th>DNI</th>
                 <th>Apellido</th>
                 <th>Nombre</th>
@@ -217,48 +218,90 @@ const Dashboard = ({ onLogout }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredData().map(dato => (
-                <tr key={dato.id}>
-                  <td>{dato.DNI}</td>
-                  <td>{dato.apellido}</td>
-                  <td>{dato.nombre}</td>
-                  <td>{dato.curso}</td>
-                  <td>
-                    <button className="btn btn-danger" onClick={() => handleDelete(dato.id)}>Eliminar</button>
-                    <button className="btn btn-primary" onClick={() => handleEdit(dato)}>Editar</button>
-                  </td>
-                </tr>
+              {filteredData().map((dato) => (
+                <React.Fragment key={dato.id}>
+                  <tr>
+                    <td><img src={dato.foto} alt="Foto de alumno" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+                    </td>
+                    <td>{dato.DNI}</td>
+                    <td>{dato.apellido}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.curso}</td>
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(dato.id)}
+                      >
+                        Eliminar
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleEdit(dato)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="btn btn-info"
+                        onClick={() => toggleRow(dato.id)}
+                      >
+                        {expandedRow === dato.id
+                          ? "Mostrar Vista Reducida"
+                          : "Mostrar Datos Completos"}
+                      </button>
+                    </td>
+                  </tr>
+                  {expandedRow === dato.id && (
+                    <tr>
+                      <td colSpan="5">
+                        <div className="expanded-data">
+                          <p><strong>Foto:</strong><br />
+                            <img src={dato.foto} alt="Foto completa" style={{ width: "100px", height: "100px", objectFit: "cover" }} />
+                          </p>
+                          <p><strong>DNI:</strong> {dato.DNI}</p>
+                          <p><strong>Curso:</strong> {dato.curso}</p>
+                          <p><strong>Apellido del Tutor:</strong> {dato.apellido_tutor}</p>
+                          <p><strong>Nombre del Tutor:</strong> {dato.nombre_tutor}</p>
+                          <p><strong>Teléfono del Tutor:</strong> {dato.telefono_tutor}</p>
+                          <p><strong>Enfermedad Crónica:</strong> {dato.enfermedad_cronica}</p>
+                          <p><strong>Cual Enfermedad:</strong> {dato.cual_enfermedad}</p>
+
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
         </div>
       )}
 
+
       {editingData && (
         <div>
           <h2>Editar Dato</h2>
           <div className="row g-0">
-          {Object.keys(formData).map((key) => (
-    <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
-      {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
-        <select className="form-control" name={key} value={formData[key]} onChange={handleFormChange}>
-          <option value="">Seleccione {key.replace(/_/g, " ")}</option>
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
-        </select>
-      ) : (
-        <input
-          type="text"
-          className="form-control"
-          name={key}
-          value={formData[key]}
-          onChange={handleFormChange}
-          placeholder={key.replace(/_/g, " ")}
-        />
-      )}
-    </div>
-  ))}
-</div>
+            {Object.keys(formData).map((key) => (
+              <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
+                {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
+                  <select className="form-control" name={key} value={formData[key]} onChange={handleFormChange}>
+                    <option value="">Seleccione {key.replace(/_/g, " ")}</option>
+                    <option value="Sí">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    className="form-control"
+                    name={key}
+                    value={formData[key]}
+                    onChange={handleFormChange}
+                    placeholder={key.replace(/_/g, " ")}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           <button className="btn btn-primary mt-2" onClick={handleUpdate}>Guardar Cambios</button>
         </div>
       )}
