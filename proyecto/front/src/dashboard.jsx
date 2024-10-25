@@ -86,7 +86,7 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const handleDNIChange = (e) => {
-    const value = e.target.value.trim(); // Elimina espacios adicionales
+    const value = e.target.value.trim(); 
     setFilterDNI(value);
   };
 
@@ -124,7 +124,7 @@ const Dashboard = ({ onLogout }) => {
 
   const filteredData = () => {
     return datos.filter((dato) => {
-      const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true; // Asegúrate de convertir a string
+      const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true; 
       const matchesCurso = filterCurso ? dato.curso.includes(filterCurso) : true;
       const matchesNombreApellido = filterNombreApellido ? 
         `${dato.nombre} ${dato.apellido}`.toLowerCase().includes(filterNombreApellido.toLowerCase()) : true;
