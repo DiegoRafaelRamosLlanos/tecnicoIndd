@@ -1,15 +1,24 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { Modal, Button } from 'react-bootstrap';
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+  const [filterDNI, setFilterDNI] = useState("");
+  const [filterCurso, setFilterCurso] = useState("");
+  const [filterNombreApellido, setFilterNombreApellido] = useState("");
   const [editingData, setEditingData] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [showList, setShowList] = useState(false);
+  const [expandedRow, setExpandedRow] = useState(null);
+
   const [formData, setFormData] = useState({
     marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
@@ -27,18 +36,28 @@ const Dashboard = ({ onLogout }) => {
   });
 
 
-  const [filterDNI, setFilterDNI] = useState("");
-  const [filterCurso, setFilterCurso] = useState("");
-  const [filterNombreApellido, setFilterNombreApellido] = useState("");
-  const [expandedRow, setExpandedRow] = useState(null);
+ 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     onLogout();
     navigate("/login");
   };
-  const toggleRow = (id) => {
-    setExpandedRow(expandedRow === id ? null : id);
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setSelectedData(null);
+    setExpandedRow(null);
+  };
+  const toggleRow = (dato) => {
+    if (expandedRow === dato.id) {
+      setExpandedRow(null);
+      setShowPopup(false); 
+    } else {
+      setExpandedRow(dato.id);
+      setSelectedData(dato);
+      setShowPopup(true);
+    }
   };
 
   useEffect(() => {
@@ -114,15 +133,19 @@ const Dashboard = ({ onLogout }) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text("Lista de Alumnos", 10, 10);
-    let y = 20;
-
+    doc.setFontSize(12);
+    doc.text("nombre - apellido - dni - curso", 10, 20);
+  
+    let y = 30; 
+  
     datos.forEach((dato, index) => {
-      doc.text(`${index + 1}. ${dato.nombre} ${dato.apellido}`, 10, y);
+      doc.text(`${index + 1}. ${dato.nombre} ${dato.apellido} - ${dato.DNI} - ${dato.curso}`, 10, y);
       y += 10;
     });
-
+  
     doc.save("lista_alumnos.pdf");
   };
+  
 
 
   const filteredData = () => {
@@ -135,7 +158,7 @@ const Dashboard = ({ onLogout }) => {
     });
   };
 
-
+  const isModalVisible = showPopup && selectedData !== null;
   return (
     <div className="container-fluid mt-1">
       <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
@@ -242,7 +265,7 @@ const Dashboard = ({ onLogout }) => {
                       </button>
                       <button
                         className="btn btn-info"
-                        onClick={() => toggleRow(dato.id)}
+                        onClick={() => toggleRow(dato)}
                       >
                         {expandedRow === dato.id
                           ? "Mostrar Vista Reducida"
@@ -250,25 +273,34 @@ const Dashboard = ({ onLogout }) => {
                       </button>
                     </td>
                   </tr>
-                  {expandedRow === dato.id && (
-                    <tr>
-                      <td colSpan="5">
-                        <div className="expanded-data">
-                          <p><strong>Foto:</strong><br />
-                            <img src={dato.foto} alt="Foto completa" style={{ width: "100px", height: "100px", objectFit: "cover" }} />
-                          </p>
-                          <p><strong>DNI:</strong> {dato.DNI}</p>
-                          <p><strong>Curso:</strong> {dato.curso}</p>
-                          <p><strong>Apellido del Tutor:</strong> {dato.apellido_tutor}</p>
-                          <p><strong>Nombre del Tutor:</strong> {dato.nombre_tutor}</p>
-                          <p><strong>Teléfono del Tutor:</strong> {dato.telefono_tutor}</p>
-                          <p><strong>Enfermedad Crónica:</strong> {dato.enfermedad_cronica}</p>
-                          <p><strong>Cual Enfermedad:</strong> {dato.cual_enfermedad}</p>
+                  {isModalVisible && (
+      <Modal show={showPopup} onHide={handleClosePopup}  size="lg">
+      <Modal.Header closeButton>
+        <Modal.Title>Detalles del Alumno</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div style={{ textAlign: "center" }}>
+          <p><strong>Foto:</strong><br />
+            <img src={selectedData.foto} alt="Foto completa" style={{ width: "100px", height: "100px", objectFit: "full" }} />
+          </p>
+          <p><strong>Nombre:</strong> {selectedData.nombre}</p>
+          <p><strong>Apellido:</strong> {selectedData.apellido}</p>
+          <p><strong>DNI:</strong> {selectedData.DNI}</p>
+          <p><strong>Curso:</strong> {selectedData.curso}</p>
+          <p><strong>Teléfono del Tutor:</strong> {selectedData.telefono_tutor}</p>
+          <p><strong>Enfermedad Crónica:</strong> {selectedData.enfermedad_cronica}</p>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClosePopup}>
+          Cerrar
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    
+    )}
 
-                        </div>
-                      </td>
-                    </tr>
-                  )}
+
                 </React.Fragment>
               ))}
             </tbody>
