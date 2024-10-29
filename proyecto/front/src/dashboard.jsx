@@ -58,12 +58,23 @@ const Dashboard = ({ onLogout }) => {
         console.error("Error al eliminar el dato:", error);
       });
   };
-
+ /* const handleEdit = (dato) => {
+    setEditingData(dato);
+    setFormData(dato);
+    
+    // Agrega la clase fade-out y luego redirige
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+      window.location.href = `/alumnoDatos/editar.html?userId=${dato.id}`;
+    }, 500); // Espera a que termine la animación
+  };*/
   const handleEdit = (dato) => {
     setEditingData(dato);
-    setFormData(dato); 
+    setFormData(dato);
+    localStorage.setItem("./Dashboard", window.location.href); // Guarda la URL actual
+    window.location.href = `/alumnoDatos/editar.html?userId=${dato.id}`; // Cambia por la ruta correcta
   };
-
+  
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
