@@ -162,8 +162,8 @@ const Dashboard = ({ onLogout }) => {
   const isModalVisible = showPopup && selectedData !== null;
   return (
     <div className="container-fluid mt-1-">
-      <button className="btn btn-danger btn-lg btn-block" >Cerrar sesión</button>
-      <button className="btn btn-success btn-lg btn-block" >Exportar a PDF</button>
+      <button className="btn btn-danger btn-lg btn-block" onClick={handleLogout}>Cerrar sesión</button>
+      <button className="btn btn-success btn-lg btn-block" onClick={exportToPDF}>Exportar a PDF</button>
 
       <h4>Agregar Nuevo Dato</h4>
       <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
