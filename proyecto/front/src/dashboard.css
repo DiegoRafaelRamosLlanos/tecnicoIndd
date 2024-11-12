@@ -1,0 +1,10 @@
+.modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+/*Limitamos los espacios de los botones y los centramos*/
+.container-fluid {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 20px; /* Bajamos un poco el boton cerrar sesion */
+  }

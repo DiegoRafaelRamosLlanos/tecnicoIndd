@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from './Login';
 import Dashboard from './dashboard';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
