@@ -28,29 +28,29 @@ function Login({ onLogin }) {
     }
   };
 
+
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="background">
+      <div className="shape shape-custom"></div> {/* Cambiado a shape-custom */}
       <form onSubmit={handleLogin}>
-        <div>
-          <label>Nombre de usuario:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
+        <h3>Login</h3>
+        <label>Nombre de usuario:</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="User"
+          required
+        />
+        <label>Contraseña:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
+        {errorMessage && <div style={{ color: "#e65353" }}>{errorMessage}</div>}
         <button type="submit">Iniciar sesión</button>
       </form>
     </div>

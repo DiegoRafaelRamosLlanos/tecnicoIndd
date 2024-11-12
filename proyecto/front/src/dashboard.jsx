@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
-import { Modal, Button } from 'react-bootstrap';
+import {  Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
+
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -160,9 +161,9 @@ const Dashboard = ({ onLogout }) => {
 
   const isModalVisible = showPopup && selectedData !== null;
   return (
-    <div className="container-fluid mt-1">
-      <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
-      <button className="btn btn-success" onClick={exportToPDF}>Exportar a PDF</button>
+    <div className="container-fluid mt-1-">
+      <button className="btn btn-danger btn-lg btn-block" >Cerrar sesión</button>
+      <button className="btn btn-success btn-lg btn-block" >Exportar a PDF</button>
 
       <h4>Agregar Nuevo Dato</h4>
       <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
@@ -229,22 +230,22 @@ const Dashboard = ({ onLogout }) => {
             />
           </div>
 
-          <table className="table table-responsive">
-            <thead>
-              <tr>
-              <th>foto</th>
-                <th>DNI</th>
-                <th>Apellido</th>
-                <th>Nombre</th>
-                <th>Curso</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
+          <table className="table table-striped table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Foto</th>
+              <th>DNI</th>
+              <th>Apellido</th>
+              <th>Nombre</th>
+              <th>Curso</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
             <tbody>
               {filteredData().map((dato) => (
                 <React.Fragment key={dato.id}>
                   <tr>
-                    <td><img src={dato.foto} alt="Foto de alumno" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+                    <td><img src={dato.foto} alt="Foto de alumno" style={{ width: "120px", height: "120px", objectFit: "cover" }} />
                     </td>
                     <td>{dato.DNI}</td>
                     <td>{dato.apellido}</td>
@@ -273,32 +274,93 @@ const Dashboard = ({ onLogout }) => {
                       </button>
                     </td>
                   </tr>
+                  {/* pop up para mostrar datos completos de un alumno */}
                   {isModalVisible && (
-      <Modal show={showPopup} onHide={handleClosePopup}  size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>Detalles del Alumno</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div style={{ textAlign: "center" }}>
-          <p><strong>Foto:</strong><br />
-            <img src={selectedData.foto} alt="Foto completa" style={{ width: "100px", height: "100px", objectFit: "full" }} />
-          </p>
-          <p><strong>Nombre:</strong> {selectedData.nombre}</p>
-          <p><strong>Apellido:</strong> {selectedData.apellido}</p>
-          <p><strong>DNI:</strong> {selectedData.DNI}</p>
-          <p><strong>Curso:</strong> {selectedData.curso}</p>
-          <p><strong>Teléfono del Tutor:</strong> {selectedData.telefono_tutor}</p>
-          <p><strong>Enfermedad Crónica:</strong> {selectedData.enfermedad_cronica}</p>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClosePopup}>
-          Cerrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
-    
-    )}
+  <Modal show={showPopup} onHide={handleClosePopup} size="xl">
+    <Modal.Header closeButton>
+      <Modal.Title>Datos Institucionales del Alumno</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <Card>
+        <Card.Header bg="info" texto="blanco" style={{ height: '160px' }}>
+          <Row align="items-center">
+            <Col md={3} className="text-center">
+              <img src={selectedData.foto} alt="Foto completa" className="img-fluid rounded-circle" />
+            </Col>
+            <Col md={9} className="text-center">
+              <h2>{selectedData.nombre}</h2>
+              <p><strong>ID del Alumno:</strong> {selectedData.DNI}</p>
+            </Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          <Tab.Container defaultActiveKey="informacionPersonal">
+            <Nav variant="tabs">
+              <Nav.Item>
+                <Nav.Link eventKey="informacionPersonal">Informacion Personal</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="prehevias">Prehevias</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="tutor">Tutor</Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <Tab.Content>
+              <Tab.Pane eventKey="informacionPersonal">
+                <ul className="list-unstyled">
+                  <li><strong>Nombre:</strong> {selectedData.nombre}</li>
+                  <li><strong>Apellido:</strong> {selectedData.apellido}</li>
+                  <li><strong>DNI:</strong> {selectedData.DNI}</li>
+                  <li><strong>Curso:</strong> {selectedData.curso}</li>
+                  <li><strong>Edad:</strong> {selectedData.edad}</li>
+                  <li><strong>Tiene hermanos:</strong> {selectedData.tiene_hermanos}</li>
+                  <li><strong>Telefono alumno:</strong> {selectedData.telefono_alumno}</li>
+                  <li><strong>Establecimiento año anterior:</strong> {selectedData.establecimiento_anio_anterior}</li>
+                  <li><strong>Enfermedad cronica:</strong> {selectedData.enfermedad_cronica}</li>
+                  <li><strong>Cual enfermedad:</strong> {selectedData.cual_enfermedad}</li>
+                  <li><strong>Medicacion:</strong> {selectedData.medicacion}</li>
+                  <li><strong>Cual medicacion:</strong> {selectedData.cual_medicacion}</li>
+                  <li><strong>Correo electronico:</strong> {selectedData.correoElectronico}</li>
+                  <li><strong>Fecha de nacimiento:</strong> {selectedData.fecha_nacimiento}</li>
+                  <li><strong>Lugar de nacimiento:</strong> {selectedData.lugar_nacimiento}</li>
+                  <li><strong>Nacionalidad:</strong> {selectedData.nacionalidad}</li>
+                  <li><strong>Domicilio:</strong> {selectedData.domicilio}</li>
+                  <li><strong>Barrio:</strong> {selectedData.barrio}</li>
+                  <li><strong>Codigo postal:</strong> {selectedData.cod_postal}</li>
+                </ul>
+              </Tab.Pane>
+              <Tab.Pane eventKey="prehevias">
+                <h5>Prehevias</h5>             
+                  <li><strong>Materias adeuda:</strong> {selectedData.materias_adeuda}</li>
+                  <li><strong>Adeuda materias:</strong> {selectedData.adeuda_materias}</li>
+                  <li><strong>Quien aprobo:</strong> {selectedData.quien_aprobo}</li>
+              </Tab.Pane>
+              <Tab.Pane eventKey="tutor">
+                <h5>Tutor</h5>             
+                  <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>
+                  <li><strong>Nombre del tutor:</strong> {selectedData.nombre_tutor}</li>
+                  <li><strong>Telefono del tutor:</strong> {selectedData.telefono_tutor}</li>
+                  <li><strong>Telefono del tutor 2:</strong> {selectedData.telefono_tutor2}</li>
+                  <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>                  
+                  <li><strong>DNI tutor:</strong> {selectedData.DNI_tutor}</li>
+                  <li><strong>Cuit tutor:</strong> {selectedData.cuit_tutor}</li>                  
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
+        </Card.Body>
+        <Card.Footer className="text-center">
+          <p className="text-muted">Última actualización: Octubre 2024</p>
+        </Card.Footer>
+      </Card>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClosePopup}>
+        Cerrar
+      </Button>
+    </Modal.Footer>
+  </Modal>
+)}
 
 
                 </React.Fragment>
