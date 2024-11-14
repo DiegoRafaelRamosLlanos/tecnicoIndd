@@ -73,14 +73,17 @@ const Dashboard = ({ onLogout }) => {
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
-      .then(response => {
-        setDatos(datos.filter(dato => dato.id !== id));
-      })
-      .catch(error => {
-        console.error("Error al eliminar el dato:", error);
-      });
+      if (window.confirm("¿Estás seguro de que deseas eliminar este estudiante? Esta acción no se puede deshacer.")) {
+        axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
+        .then(response => {
+          setDatos(datos.filter(dato => dato.id !== id));
+        })
+        .catch(error => {
+          console.error("Error al eliminar el dato:", error);
+        });
+      }
   };
+
 
   const handleEdit = (dato) => {
     setEditingData(dato);
