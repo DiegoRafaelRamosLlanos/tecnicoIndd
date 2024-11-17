@@ -9,8 +9,9 @@ function Login({ onLogin }) {
   const navigate = useNavigate();
 
   const users = [
-    { username: "admin", password: "123456" },
-    { username: "user", password: "password" },
+    { username: "administrador", password: "administrador" },
+    { username: "secretario", password: "secretario" },
+    { username: "preceptor", password: "preceptor" }
   ];
 
   const handleLogin = (e) => {
