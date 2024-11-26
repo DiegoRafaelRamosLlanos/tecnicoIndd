@@ -1,0 +1,19 @@
+{
+  "name": "tecnicoindd",
+  "version": "1.0.0",
+  "description": "Repositorio para proyecto pra colegio",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "jspdf": "^2.5.2",
+    "nodemon": "^3.1.7",
+    "xlsx": "^0.18.5"
+  }
+}
