@@ -1,2 +1,2 @@
 # tecnicoIndd
-Repositorio para proyecto pra colegio
+Repositorio para proyecto para colegio
