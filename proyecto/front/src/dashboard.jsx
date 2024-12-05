@@ -35,8 +35,6 @@ const Dashboard = ({ onLogout }) => {
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
     nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
   });
-
-
  
   const navigate = useNavigate();
 
@@ -73,17 +71,20 @@ const Dashboard = ({ onLogout }) => {
   }, []);
 
   const handleDelete = (id) => {
-      if (window.confirm("¿Estás seguro de que deseas eliminar este estudiante? Esta acción no se puede deshacer.")) {
-        axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
+    if (window.confirm("¿Estás seguro de que deseas eliminar este estudiante?")) {
+      axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
         .then(response => {
           setDatos(datos.filter(dato => dato.id !== id));
+          // Mostrar un mensaje de éxito al usuario
+          console.log("Estudiante eliminado correctamente");
         })
         .catch(error => {
-          console.error("Error al eliminar el dato:", error);
+          console.error("Error al eliminar el estudiante:", error);
+          // Mostrar un mensaje de error al usuario
+          alert("Ocurrió un error al eliminar el estudiante. Por favor, inténtalo de nuevo más tarde.");
         });
-      }
+    }
   };
-
 
   const handleEdit = (dato) => {
     setEditingData(dato);
@@ -163,6 +164,7 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const isModalVisible = showPopup && selectedData !== null;
+  
   return (
     <div className="container-fluid mt-1-">
       <button className="btn btn-danger btn-lg btn-block" onClick={handleLogout}>Cerrar sesión</button>
@@ -170,7 +172,12 @@ const Dashboard = ({ onLogout }) => {
 
       <h4>Agregar Nuevo Dato</h4>
       <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
-        {showTable ? "Ocultar Ingreso de Datos" : "Mostrar Ingreso de Datos"}
+        {showTable ? "Disminuir pestañas" : "Agregar datos"}
+      </button>
+
+      <h4>Editar Dato</h4>
+      <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
+        {showTable ? "Disminuir pestañas" : "Editar datos"}
       </button>
 
       {showTable && (
