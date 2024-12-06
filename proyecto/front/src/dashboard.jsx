@@ -163,6 +163,28 @@ const Dashboard = ({ onLogout }) => {
     });
   };
 
+  const handleSaveChanges = () => {
+    if (selectedData) {
+      // Realiza la llamada a la API para actualizar los datos en el servidor
+      axios.put(`http://localhost:3001/proyecto/actualizarUsuario/${selectedData.id}`, selectedData)
+        .then(response => {
+          // Actualiza el estado de datos con los nuevos valores
+          setDatos(datos.map(dato => (dato.id === selectedData.id ? { ...dato, ...selectedData } : dato)));
+          // Cierra el modal
+          handleClosePopup();
+        })
+        .catch(error => {
+          console.error("Error al guardar los cambios:", error);
+        });
+    }
+  };
+
+  const handleInputChange = (key, value) => {
+    setSelectedData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
   const isModalVisible = showPopup && selectedData !== null;
   
   return (
@@ -175,10 +197,7 @@ const Dashboard = ({ onLogout }) => {
         {showTable ? "Disminuir pestañas" : "Agregar datos"}
       </button>
 
-      <h4>Editar Dato</h4>
-      <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
-        {showTable ? "Disminuir pestañas" : "Editar datos"}
-      </button>
+
 
       {showTable && (
         <div>
@@ -207,6 +226,140 @@ const Dashboard = ({ onLogout }) => {
           <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit}>Agregar Dato</button>
         </div>
       )}
+      <h4>Editar Dato</h4>
+      <button className="btn btn-info" onClick={() => toggleRow(datos)}>
+      {expandedRow === datos.id ? "Ocultar " : "Modificar Datos"}
+    </button>
+    <div>
+          <h2>Lista de Datos</h2>
+
+          <div className="d-flex mb-3">
+            <input
+              type="text"
+              placeholder="Filtrar por DNI"
+              className="form-control mx-1"
+              value={filterDNI}
+              onChange={handleDNIChange}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Curso"
+              className="form-control mx-1"
+              value={filterCurso}
+              onChange={(e) => setFilterCurso(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Nombre y Apellido"
+              className="form-control mx-1"
+              value={filterNombreApellido}
+              onChange={(e) => setFilterNombreApellido(e.target.value)}
+            />
+          </div>
+          </div>
+      {isModalVisible && (
+  <Modal show={showPopup} onHide={handleClosePopup} size="xl">
+    <Modal.Header closeButton>
+      <Modal.Title>Datos Institucionales del Alumno</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <Card>
+        <Card.Header bg="info" texto="blanco" style={{ height: '160px' }}>
+          <Row align="items-center">
+            <Col md={3} className="text-center">
+              <img src={selectedData.foto} alt="Foto completa" className="img-fluid rounded-circle" />
+            </Col>
+            <Col md={9} className="text-center">
+              <h2>{selectedData.nombre}</h2>
+              <p><strong>ID del Alumno:</strong> {selectedData.DNI}</p>
+            </Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          {/* Formulario editable */}
+          <Tab.Container defaultActiveKey="informacionPersonal">
+            <Nav variant="tabs">
+              <Nav.Item>
+                <Nav.Link eventKey="informacionPersonal">Informacion Personal</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="prehevias">Prehevias</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="tutor">Tutor</Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <Tab.Content>
+              <Tab.Pane eventKey="informacionPersonal">
+                <ul className="list-unstyled">
+                  {/* Campos editables */}
+                  {Object.entries(selectedData).map(([key, value]) => (
+                    key !== 'foto' && key !== 'DNI' && (
+                      <li key={key}>
+                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> 
+                        <input 
+                          type="text" 
+                          value={value} 
+                          onChange={(e) => handleInputChange(key, e.target.value)} 
+                        />
+                      </li>
+                    )
+                  ))}
+                </ul>
+              </Tab.Pane>
+
+              {/* Sección Prehevias */}
+              <Tab.Pane eventKey="prehevias">
+                <h5>Prehevias</h5>             
+                  {/* Campos editables para Prehevias */}
+                  {['materias_adeuda', 'adeuda_materias', 'quien_aprobo'].map((field) => (
+                    <li key={field}>
+                      <strong>{field.charAt(0).toUpperCase() + field.slice(1)}:</strong> 
+                      <input 
+                        type="text" 
+                        value={selectedData[field]} 
+                        onChange={(e) => handleInputChange(field, e.target.value)} 
+                      />
+                    </li>
+                  ))}
+              </Tab.Pane>
+
+              {/* Sección Tutor */}
+              <Tab.Pane eventKey="tutor">
+                <h5>Tutor</h5>             
+                  {/* Campos editables para Tutor */}
+                  {['apellido_tutor', 'nombre_tutor', 'telefono_tutor', 'telefono_tutor2', 'DNI_tutor', 'cuit_tutor'].map((field) => (
+                    <li key={field}>
+                      <strong>{field.charAt(0).toUpperCase() + field.slice(1)}:</strong> 
+                      <input 
+                        type="text" 
+                        value={selectedData[field]} 
+                        onChange={(e) => handleInputChange(field, e.target.value)} 
+                      />
+                    </li>
+                  ))}
+              </Tab.Pane>
+
+            </Tab.Content>
+          </Tab.Container>
+        </Card.Body>
+
+        {/* Botones para guardar/cancelar */}
+        <Card.Footer className="text-center">
+          <Button variant="primary" onClick={handleSaveChanges}>
+            Guardar Cambios
+          </Button>
+          {' '}
+          <Button variant="secondary" onClick={handleClosePopup}>
+            Cancelar
+          </Button>
+        </Card.Footer>
+
+      </Card>
+    </Modal.Body>
+  </Modal>
+)}
+
 
       <button className="btn btn-info mt-1" onClick={() => setShowList(!showList)}>
         {showList ? "Ocultar Lista de Datos" : "Mostrar Lista de Datos"}
