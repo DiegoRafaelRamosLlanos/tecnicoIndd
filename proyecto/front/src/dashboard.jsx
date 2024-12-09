@@ -17,15 +17,18 @@ const Dashboard = ({ onLogout }) => {
   const [filterNombreApellido, setFilterNombreApellido] = useState("");
   const [editingData, setEditingData] = useState(null);
   const [showTable, setShowTable] = useState(false);
-  const [showList, setShowList] = useState(false);
+  const [showList, setShowList ] = useState(false);
+  const [showFirstList, setShowFirstList] = useState(false);
+  const [showSecondList, setShowSecondList] = useState(false);
+  const [showThirdList, setShowThirdList] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
-
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
     establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
+    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
   });
 
   const [newData, setNewData] = useState({
@@ -33,9 +36,9 @@ const Dashboard = ({ onLogout }) => {
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
     establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
+    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
   });
- 
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -71,20 +74,17 @@ const Dashboard = ({ onLogout }) => {
   }, []);
 
   const handleDelete = (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este estudiante?")) {
-      axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
+      if (window.confirm("¿Estás seguro de que deseas eliminar este estudiante? Esta acción no se puede deshacer.")) {
+        axios.delete(`http://localhost:3001/proyecto/borrarUsuario/${id}`)
         .then(response => {
           setDatos(datos.filter(dato => dato.id !== id));
-          // Mostrar un mensaje de éxito al usuario
-          console.log("Estudiante eliminado correctamente");
         })
         .catch(error => {
-          console.error("Error al eliminar el estudiante:", error);
-          // Mostrar un mensaje de error al usuario
-          alert("Ocurrió un error al eliminar el estudiante. Por favor, inténtalo de nuevo más tarde.");
+          console.error("Error al eliminar el dato:", error);
         });
-    }
+      }
   };
+
 
   const handleEdit = (dato) => {
     setEditingData(dato);
@@ -162,7 +162,6 @@ const Dashboard = ({ onLogout }) => {
       return matchesDNI && matchesCurso && matchesNombreApellido;
     });
   };
-
   const handleSaveChanges = () => {
     if (selectedData) {
       // Realiza la llamada a la API para actualizar los datos en el servidor
@@ -186,7 +185,6 @@ const Dashboard = ({ onLogout }) => {
     }));
   };
   const isModalVisible = showPopup && selectedData !== null;
-  
   return (
     <div className="container-fluid mt-1-">
       <button className="btn btn-danger btn-lg btn-block" onClick={handleLogout}>Cerrar sesión</button>
@@ -194,10 +192,8 @@ const Dashboard = ({ onLogout }) => {
 
       <h4>Agregar Nuevo Dato</h4>
       <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
-        {showTable ? "Disminuir pestañas" : "Agregar datos"}
+        {showTable ? "Ocultar Datos" : "Agregar Datos"}
       </button>
-
-
 
       {showTable && (
         <div>
@@ -226,11 +222,13 @@ const Dashboard = ({ onLogout }) => {
           <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit}>Agregar Dato</button>
         </div>
       )}
-      <h4>Editar Dato</h4>
-      <button className="btn btn-info" onClick={() => toggleRow(datos)}>
-      {expandedRow === datos.id ? "Ocultar " : "Modificar Datos"}
-    </button>
-    <div>
+
+<button className="btn btn-info mt-1" onClick={() => setShowFirstList(!showFirstList)}>
+  {showFirstList ? "Ocultar " : "Modificar Datos"}
+</button>
+      {showFirstList && (
+        
+        <div>
           <h2>Lista de Datos</h2>
 
           <div className="d-flex mb-3">
@@ -256,8 +254,44 @@ const Dashboard = ({ onLogout }) => {
               onChange={(e) => setFilterNombreApellido(e.target.value)}
             />
           </div>
-          </div>
-      {isModalVisible && (
+          {(filterDNI || filterCurso || filterNombreApellido) && (
+      <table className="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>DNI</th>
+            <th>Apellido</th>
+            <th>Nombre</th>
+            <th>Curso</th>
+            <th>Acciones</th>
+          </tr>
+           
+        </thead>
+        <tbody>
+       
+          {filteredData().map((dato) => (
+            <React.Fragment  key={dato.id}>
+              <tr>
+                    <td><img src={dato.foto} alt="Foto de alumno" style={{ width: "120px", height: "120px", objectFit: "cover" }} />
+                    </td>
+                    <td>{dato.DNI}</td>
+                    <td>{dato.apellido}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.curso}</td>
+                    <td style={{ textAlign: 'center', display: 'flex', alignItems: 'center' }}>
+                      <button
+                        className="btn btn-primary"
+                        style={{ padding: '36px 20px', fontSize: '30px' }}
+                        onClick={() => toggleRow(dato)}
+                      >
+                          {showModal === dato.id
+                          ? "No Mostrar"
+                          : "Editar"}
+                      </button>
+                    </td>
+                  </tr>
+                   {/* pop up para mostrar datos completos de un alumno */}
+{isModalVisible && (
   <Modal show={showPopup} onHide={handleClosePopup} size="xl">
     <Modal.Header closeButton>
       <Modal.Title>Datos Institucionales del Alumno</Modal.Title>
@@ -282,9 +316,9 @@ const Dashboard = ({ onLogout }) => {
               <Nav.Item>
                 <Nav.Link eventKey="informacionPersonal">Informacion Personal</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+             {/* <Nav.Item>
                 <Nav.Link eventKey="prehevias">Prehevias</Nav.Link>
-              </Nav.Item>
+              </Nav.Item>*/}
               <Nav.Item>
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
@@ -308,10 +342,9 @@ const Dashboard = ({ onLogout }) => {
                 </ul>
               </Tab.Pane>
 
-              {/* Sección Prehevias */}
+              {/* Sección Prehevias 
               <Tab.Pane eventKey="prehevias">
                 <h5>Prehevias</h5>             
-                  {/* Campos editables para Prehevias */}
                   {['materias_adeuda', 'adeuda_materias', 'quien_aprobo'].map((field) => (
                     <li key={field}>
                       <strong>{field.charAt(0).toUpperCase() + field.slice(1)}:</strong> 
@@ -323,7 +356,7 @@ const Dashboard = ({ onLogout }) => {
                     </li>
                   ))}
               </Tab.Pane>
-
+*/}
               {/* Sección Tutor */}
               <Tab.Pane eventKey="tutor">
                 <h5>Tutor</h5>             
@@ -361,11 +394,20 @@ const Dashboard = ({ onLogout }) => {
 )}
 
 
-      <button className="btn btn-info mt-1" onClick={() => setShowList(!showList)}>
-        {showList ? "Ocultar Lista de Datos" : "Mostrar Lista de Datos"}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+)}
+
+
+      <button className="btn btn-info mt-1" onClick={() => setShowSecondList(!showSecondList)}>
+        {showSecondList ? "Ocultar" : "Consultar Datos"}
       </button>
 
-      {showList && (
+      {showSecondList && (
         <div>
           <h2>Lista de Datos</h2>
 
@@ -415,7 +457,7 @@ const Dashboard = ({ onLogout }) => {
                     <td>{dato.nombre}</td>
                     <td>{dato.curso}</td>
                     <td>
-                      <button
+                       {/*<button
                         className="btn btn-danger"
                         onClick={() => handleDelete(dato.id)}
                       >
@@ -426,7 +468,7 @@ const Dashboard = ({ onLogout }) => {
                         onClick={() => handleEdit(dato)}
                       >
                         Editar
-                      </button>
+                      </button>*/}
                       <button
                         className="btn btn-info"
                         onClick={() => toggleRow(dato)}
@@ -532,7 +574,78 @@ const Dashboard = ({ onLogout }) => {
           </table>
         </div>
       )}
+<button className="btn btn-primary" onClick={() => setShowThirdList(!showThirdList)}>
+  {showThirdList ? "Ocultar " : "Eliminar"}
+</button>
+{showThirdList && (
+        <div>
+        <h2>Lista de Datos</h2>
 
+        <div className="d-flex mb-3">
+          <input
+            type="text"
+            placeholder="Filtrar por DNI"
+            className="form-control mx-1"
+            value={filterDNI}
+            onChange={handleDNIChange}
+          />
+          <input
+            type="text"
+            placeholder="Filtrar por Curso"
+            className="form-control mx-1"
+            value={filterCurso}
+            onChange={(e) => setFilterCurso(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Filtrar por Nombre y Apellido"
+            className="form-control mx-1"
+            value={filterNombreApellido}
+            onChange={(e) => setFilterNombreApellido(e.target.value)}
+          />
+        </div>
+        {(filterDNI || filterCurso || filterNombreApellido) && (
+    <table className="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>DNI</th>
+          <th>Apellido</th>
+          <th>Nombre</th>
+          <th>Curso</th>
+          <th>Acciones</th>
+        </tr>
+         
+      </thead>
+      <tbody>
+     
+        {filteredData().map((dato) => (
+          <React.Fragment  key={dato.id}>
+            <tr>
+                  <td><img src={dato.foto} alt="Foto de alumno" style={{ width: "120px", height: "120px", objectFit: "cover" }} />
+                  </td>
+                  <td>{dato.DNI}</td>
+                  <td>{dato.apellido}</td>
+                  <td>{dato.nombre}</td>
+                  <td>{dato.curso}</td>
+                  <td style={{ textAlign: 'center', display: 'flex', alignItems: 'center' }}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(dato.id)}
+                    >
+                        {expandedRow === dato.id
+                        ? "No Mostrar"
+                        : "Eliminar"}
+                    </button>
+                  </td>
+                </tr>
+</React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+)}
 
       {editingData && (
         <div>
