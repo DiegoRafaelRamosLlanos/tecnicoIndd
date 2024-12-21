@@ -193,13 +193,33 @@ const Dashboard = ({ onLogout }) => {
       <button className="btn btn-success btn-lg btn-block" onClick={exportToPDF}>Exportar a PDF</button>
 */}
 
-      <h4>Agregar Nuevo Dato</h4>
+<h4>Agregar Nuevo Dato</h4>
+    <div className="d-flex justify-content-center mb-4"> {/* Contenedor para centrar los botones */}
       <button 
-        className="btn btn-info square-button" 
+        className="btn btn-info square-button mx-2" 
         onClick={() => handleSectionToggle("addData")}
       >
         {activeSection === "addData" ? "Ocultar Datos" : "Agregar Datos"}
       </button>
+      <button 
+        className="btn btn-info square-button mx-2" 
+        onClick={() => handleSectionToggle("modifyData")}
+      >
+        {activeSection === "modifyData" ? "Ocultar" : "Modificar Datos"}
+      </button>
+      <button 
+        className="btn btn-info square-button mx-2" 
+        onClick={() => handleSectionToggle("consultData")}
+      >
+        {activeSection === "consultData" ? "Ocultar" : "Consultar Datos"}
+      </button>
+      <button 
+        className="btn btn-info square-button mx-2" 
+        onClick={() => handleSectionToggle("deleteData")}
+      >
+        {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
+      </button>
+    </div>
 
       {activeSection === "addData" && (
         <div>
@@ -229,12 +249,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
       )}
 
-      <button 
-        className="btn btn-info square-button" 
-        onClick={() => handleSectionToggle("modifyData")}
-      >
-        {activeSection === "modifyData" ? "Ocultar" : "Modificar Datos"}
-      </button>
+
       {activeSection === "modifyData" && (
         
         <div>
@@ -412,12 +427,6 @@ const Dashboard = ({ onLogout }) => {
 )}
 
 
-      <button 
-        className="btn btn-info square-button" 
-        onClick={() => handleSectionToggle("consultData")}
-      >
-        {activeSection === "consultData" ? "Ocultar" : "Consultar Datos"}
-      </button>
       {activeSection === "consultData" && (
         <div>
           <h2>Lista de Datos</h2>
@@ -585,12 +594,7 @@ const Dashboard = ({ onLogout }) => {
           </table>
         </div>
       )}
-      <button 
-        className="btn btn-info square-button" 
-        onClick={() => handleSectionToggle("deleteData")}
-      >
-        {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
-      </button>
+
       {activeSection === "deleteData" && (
         <div>
         <h2>Lista de Datos</h2>
@@ -657,9 +661,12 @@ const Dashboard = ({ onLogout }) => {
           ))}
         </tbody>
       </table>
+      
     )}
   </div>
+  
 )}
+
 
       {editingData && (
         <div>
@@ -688,8 +695,10 @@ const Dashboard = ({ onLogout }) => {
           </div>
           <button className="btn btn-primary mt-2" onClick={handleUpdate}>Guardar Cambios</button>
         </div>
+        
       )}
     </div>
+    
   );
 };
 

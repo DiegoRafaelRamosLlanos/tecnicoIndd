@@ -1,20 +1,29 @@
-.modal-body {
-  max-height: 60vh;
-  overflow-y: auto;
-  display: flex !important;
-  justify-content: center !important;
-}
-/*Limitamos los espacios de los botones y los centramos*/
+/* Limitamos los espacios de los botones y los centramos */
 .container-fluid {
-    max-width: 1200px; 
-    margin: 0 auto; 
-    padding: 20px; /* Bajamos un poco el boton cerrar sesion */
-  }
-  .square-button {
-    width: 100px !important;
-    height: 100px !important;
-    border-radius: 0 !important;
-    margin-right: 10px !important;
-    text-align: center !important;
-  }
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 20px; /* Bajamos un poco el botón cerrar sesión */
+}
 
+.square-button {
+  width: 150px !important; /* Cambia el tamaño del ancho del botón */
+  height: 150px !important; /* Cambia el tamaño de la altura del botón */
+  border-radius: 8px !important; /* Bordes redondeados */
+  margin: 0 10px !important; /* Añadimos margen horizontal para separar los botones */
+  text-align: center !important;
+  background-color: #007bff !important; /* Color de fondo */
+  color: white !important; /* Color del texto */
+  border: none !important; /* Sin borde */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Sombra */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+.square-button:hover {
+  background-color: #0056b3 !important; /* Color de fondo al pasar el ratón */
+  transform: translateY(-2px) !important; /* Efecto de elevación */
+}
+
+.square-button:active {
+  background-color: #004085 !important; /* Color de fondo al hacer clic */
+  transform: translateY(0) !important; /* Sin elevación al hacer clic */
+}
