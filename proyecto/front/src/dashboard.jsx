@@ -185,6 +185,9 @@ const Dashboard = ({ onLogout }) => {
     }));
   };
 
+  const toggleButtonClass = (event) => {
+    event.currentTarget.classList.toggle("active");
+  };
 
   const isModalVisible = showPopup && selectedData !== null;
   return (
@@ -197,25 +200,37 @@ const Dashboard = ({ onLogout }) => {
     <div className="d-flex justify-content-center mb-4"> {/* Contenedor para centrar los botones */}
       <button 
         className="btn btn-info square-button mx-2" 
-        onClick={() => handleSectionToggle("addData")}
+        onClick={(e) => {handleSectionToggle("addData")
+          toggleButtonClass(e);
+        }}
+        
       >
         {activeSection === "addData" ? "Ocultar Datos" : "Agregar Datos"}
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
-        onClick={() => handleSectionToggle("modifyData")}
+        onClick={(e) => {
+          handleSectionToggle("modifyData");
+          toggleButtonClass(e);
+        }}
       >
         {activeSection === "modifyData" ? "Ocultar" : "Modificar Datos"}
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
-        onClick={() => handleSectionToggle("consultData")}
+        onClick={(e) => {
+          handleSectionToggle("consultData");
+          toggleButtonClass(e);
+        }}
       >
         {activeSection === "consultData" ? "Ocultar" : "Consultar Datos"}
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
-        onClick={() => handleSectionToggle("deleteData")}
+        onClick={(e) => {
+          handleSectionToggle("deleteData");
+          toggleButtonClass(e);
+        }}
       >
         {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
       </button>

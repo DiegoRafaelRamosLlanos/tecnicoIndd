@@ -5,6 +5,7 @@
   padding: 20px; /* Bajamos un poco el botón cerrar sesión */
 }
 
+/* Estilo normal del botón */
 .square-button {
   width: 150px !important; /* Cambia el tamaño del ancho del botón */
   height: 150px !important; /* Cambia el tamaño de la altura del botón */
@@ -18,12 +19,11 @@
   transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
 }
 
+/* Estilo del botón cuando está activo */
+.square-button.active {
+  background-color: #423872 !important; /* Color de fondo para el estado activo */
+}
 .square-button:hover {
   background-color: #0056b3 !important; /* Color de fondo al pasar el ratón */
   transform: translateY(-2px) !important; /* Efecto de elevación */
-}
-
-.square-button:active {
-  background-color: #004085 !important; /* Color de fondo al hacer clic */
-  transform: translateY(0) !important; /* Sin elevación al hacer clic */
 }
