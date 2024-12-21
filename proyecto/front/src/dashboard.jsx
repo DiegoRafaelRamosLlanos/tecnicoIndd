@@ -4,7 +4,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
 import {  Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
-
+import useSectionToggle from "./sectionToggle"; // Ruta al para controlar botones
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,13 +16,15 @@ const Dashboard = ({ onLogout }) => {
   const [filterCurso, setFilterCurso] = useState("");
   const [filterNombreApellido, setFilterNombreApellido] = useState("");
   const [editingData, setEditingData] = useState(null);
-  const [showTable, setShowTable] = useState(false);
+  /*const [showTable, setShowTable] = useState(false);
   const [showList, setShowList ] = useState(false);
   const [showFirstList, setShowFirstList] = useState(false);
   const [showSecondList, setShowSecondList] = useState(false);
-  const [showThirdList, setShowThirdList] = useState(false);
+  const [showThirdList, setShowThirdList] = useState(false);*/
   const [expandedRow, setExpandedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { activeSection, handleSectionToggle } = useSectionToggle()
+ 
   const [formData, setFormData] = useState({
     marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
     apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
@@ -39,6 +41,7 @@ const Dashboard = ({ onLogout }) => {
     nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
   });
 
+  
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -126,7 +129,7 @@ const Dashboard = ({ onLogout }) => {
           apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
           establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
           medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-          nacionalidad: "", domicilio: "", barrio: "", cod_postal: "", materias_adeuda: "", adeuda_materias: "", quien_aprobo: ""
+          nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
         });
       })
       .catch(error => {
@@ -164,12 +167,9 @@ const Dashboard = ({ onLogout }) => {
   };
   const handleSaveChanges = () => {
     if (selectedData) {
-      // Realiza la llamada a la API para actualizar los datos en el servidor
       axios.put(`http://localhost:3001/proyecto/actualizarUsuario/${selectedData.id}`, selectedData)
         .then(response => {
-          // Actualiza el estado de datos con los nuevos valores
           setDatos(datos.map(dato => (dato.id === selectedData.id ? { ...dato, ...selectedData } : dato)));
-          // Cierra el modal
           handleClosePopup();
         })
         .catch(error => {
@@ -184,21 +184,27 @@ const Dashboard = ({ onLogout }) => {
       [key]: value,
     }));
   };
+
+
   const isModalVisible = showPopup && selectedData !== null;
   return (
     <div className="container-fluid mt-1-">
-      <button className="btn btn-danger btn-lg btn-block" onClick={handleLogout}>Cerrar sesión</button>
+     {/* <button className="btn btn-danger btn-lg btn-block" onClick={handleLogout}>Cerrar sesión</button>
       <button className="btn btn-success btn-lg btn-block" onClick={exportToPDF}>Exportar a PDF</button>
+*/}
 
       <h4>Agregar Nuevo Dato</h4>
-      <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
-        {showTable ? "Ocultar Datos" : "Agregar Datos"}
+      <button 
+        className="btn btn-info square-button" 
+        onClick={() => handleSectionToggle("addData")}
+      >
+        {activeSection === "addData" ? "Ocultar Datos" : "Agregar Datos"}
       </button>
 
-      {showTable && (
+      {activeSection === "addData" && (
         <div>
           <div className="row g-0">
-            {Object.keys(newData).map((key, index) => (
+            {Object.keys(newData).slice(0, 5).map((key, index) => (
               <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
                 {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
                   <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
@@ -223,10 +229,13 @@ const Dashboard = ({ onLogout }) => {
         </div>
       )}
 
-<button className="btn btn-info mt-1" onClick={() => setShowFirstList(!showFirstList)}>
-  {showFirstList ? "Ocultar " : "Modificar Datos"}
-</button>
-      {showFirstList && (
+      <button 
+        className="btn btn-info square-button" 
+        onClick={() => handleSectionToggle("modifyData")}
+      >
+        {activeSection === "modifyData" ? "Ocultar" : "Modificar Datos"}
+      </button>
+      {activeSection === "modifyData" && (
         
         <div>
           <h2>Lista de Datos</h2>
@@ -403,11 +412,13 @@ const Dashboard = ({ onLogout }) => {
 )}
 
 
-      <button className="btn btn-info mt-1" onClick={() => setShowSecondList(!showSecondList)}>
-        {showSecondList ? "Ocultar" : "Consultar Datos"}
+      <button 
+        className="btn btn-info square-button" 
+        onClick={() => handleSectionToggle("consultData")}
+      >
+        {activeSection === "consultData" ? "Ocultar" : "Consultar Datos"}
       </button>
-
-      {showSecondList && (
+      {activeSection === "consultData" && (
         <div>
           <h2>Lista de Datos</h2>
 
@@ -574,10 +585,13 @@ const Dashboard = ({ onLogout }) => {
           </table>
         </div>
       )}
-<button className="btn btn-primary" onClick={() => setShowThirdList(!showThirdList)}>
-  {showThirdList ? "Ocultar " : "Eliminar"}
-</button>
-{showThirdList && (
+      <button 
+        className="btn btn-info square-button" 
+        onClick={() => handleSectionToggle("deleteData")}
+      >
+        {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
+      </button>
+      {activeSection === "deleteData" && (
         <div>
         <h2>Lista de Datos</h2>
 

@@ -1,6 +1,8 @@
 .modal-body {
-    max-height: 60vh;
-    overflow-y: auto;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex !important;
+  justify-content: center !important;
 }
 /*Limitamos los espacios de los botones y los centramos*/
 .container-fluid {
@@ -8,3 +10,11 @@
     margin: 0 auto; 
     padding: 20px; /* Bajamos un poco el boton cerrar sesion */
   }
+  .square-button {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 0 !important;
+    margin-right: 10px !important;
+    text-align: center !important;
+  }
+
