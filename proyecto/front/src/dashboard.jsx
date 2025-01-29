@@ -185,7 +185,9 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const toggleButtonClass = (event) => {
-    event.currentTarget.classList.toggle("active");
+    const buttons = document.querySelectorAll('.square-button');
+    buttons.forEach(button => button.classList.remove('active'));
+    event.currentTarget.classList.add('active');
   };
 
   const isModalVisible = showPopup && selectedData !== null;
