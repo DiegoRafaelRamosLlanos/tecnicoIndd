@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
@@ -330,7 +329,7 @@ const Dashboard = ({ onLogout }) => {
                     </td>
                   </tr>
                    {/* pop up para mostrar datos completos de un alumno */}
-{isModalVisible && (
+{isModalVisible && expandedRow === dato.id && (
   <Modal show={showPopup} onHide={handleClosePopup} size="xl">
     <Modal.Header closeButton>
       <Modal.Title>Datos Institucionales del Alumno</Modal.Title>
@@ -515,7 +514,7 @@ const Dashboard = ({ onLogout }) => {
                     </td>
                   </tr>
                   {/* pop up para mostrar datos completos de un alumno */}
-                  {isModalVisible && (
+                  {isModalVisible && expandedRow === dato.id && (
   <Modal show={showPopup} onHide={handleClosePopup} size="xl">
     <Modal.Header closeButton>
       <Modal.Title>Datos Institucionales del Alumno</Modal.Title>
