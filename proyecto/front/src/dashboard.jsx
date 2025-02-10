@@ -23,6 +23,7 @@ const Dashboard = ({ onLogout }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { activeSection, handleSectionToggle } = useSectionToggle()
+  const [preheviasData, setPreheviasData] = useState([]);
  
   const [formData, setFormData] = useState({
     marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
@@ -72,6 +73,17 @@ const Dashboard = ({ onLogout }) => {
       })
       .catch(error => {
         console.error("Error al obtener los datos: ", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/prehevias/datos")
+      .then(response => {
+        console.log("Datos de prehevias recibidos:", response.data);
+        setPreheviasData(response.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener los datos de prehevias: ", error);
       });
   }, []);
 
@@ -573,9 +585,13 @@ const Dashboard = ({ onLogout }) => {
               </Tab.Pane>
               <Tab.Pane eventKey="prehevias">
                 <h5>Prehevias</h5>             
-                  <li><strong>Materias adeuda:</strong> {selectedData.materias_adeuda}</li>
-                  <li><strong>Adeuda materias:</strong> {selectedData.adeuda_materias}</li>
-                  <li><strong>Quien aprobo:</strong> {selectedData.quien_aprobo}</li>
+                  <ul className="list-unstyled">
+                    {preheviasData.map((item, index) => (
+                      <li key={index}>
+                        <strong>{item.materia}:</strong> {item.estado}
+                      </li>
+                    ))}
+                  </ul>
               </Tab.Pane>
               <Tab.Pane eventKey="tutor">
                 <h5>Tutor</h5>             
