@@ -40,7 +40,12 @@ const Dashboard = ({ onLogout }) => {
     medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
     nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
   });
-
+  const [formData2, setFormData2] = useState({
+     DNI: "", apellido: "", nombre: "", curso: "", materia: "",nota:"", estado: ""
+    });
+  const [newData2, setNewData2] = useState({
+    DNI: "", apellido: "", nombre: "", curso: "", materia: "",nota:"", estado: ""
+    });
   
   const navigate = useNavigate();
 
@@ -141,6 +146,18 @@ const Dashboard = ({ onLogout }) => {
           establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
           medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
           nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+        });
+      })
+      .catch(error => {
+        console.error("Error al registrar el nuevo dato:", error);
+      });
+  };
+  const handleNewDataSubmit2 = () => {
+    axios.post("http://localhost:3001/proyecto/registrarUsuario", newData)
+      .then(response => {
+        setDatos([...datos, response.data.data]);
+        setNewData({
+          DNI: "", apellido: "", nombre: "", curso: "", materia: "",nota:"", estado: ""
         });
       })
       .catch(error => {
@@ -252,7 +269,7 @@ const Dashboard = ({ onLogout }) => {
       {activeSection === "addData" && (
         <div>
           <div className="row g-0">
-            {Object.keys(newData).slice(0, 5).map((key, index) => (
+            {Object.keys(newData || newData2).slice(0, 5).map((key, index) => (
               <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
                 {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
                   <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
@@ -265,7 +282,7 @@ const Dashboard = ({ onLogout }) => {
                     type="text"
                     className="form-control"
                     name={key}
-                    value={newData[key]}
+                    value={newData[key] || newData2[key]}
                     onChange={handleNewDataChange}
                     placeholder={key.replace(/_/g, " ")}
                   />
@@ -273,7 +290,7 @@ const Dashboard = ({ onLogout }) => {
               </div>
             ))}
           </div>
-          <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit}>Agregar Dato</button>
+          <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit && handleNewDataSubmit2}>Agregar Dato</button>
         </div>
       )}
 

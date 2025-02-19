@@ -1,8 +1,12 @@
 import express from 'express';
-import { getPreheviasData } from '../controllers/preheviasController.js';
+import { getAlldatos, registrarUsuario, actualizarUsuario, borrarUsuario } from '../controllers/preheviasController.js';
 
 const router = express.Router();
 
-router.get('/datos', getPreheviasData); // Ruta para obtener datos de prehevias
+
+router.get('/datos', getAlldatos);                
+router.post('/registrarUsuario', registrarUsuario); 
+router.put('/actualizarUsuario/:idUsuario', actualizarUsuario); 
+router.delete('/borrarUsuario/:idUsuario', borrarUsuario);
 
 export default router;
