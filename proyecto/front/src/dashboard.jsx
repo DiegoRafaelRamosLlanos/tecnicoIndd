@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
+  const [secondSheetData, setSecondSheetData] = useState([]); // Nuevo estado
   const [showPopup, setShowPopup] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [filterDNI, setFilterDNI] = useState("");
@@ -26,22 +27,121 @@ const Dashboard = ({ onLogout }) => {
   const [preheviasData, setPreheviasData] = useState([]);
  
   const [formData, setFormData] = useState({
-    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-    apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-    establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-    medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+    foto: "", 
+    DNI: "", 
+    apellido: "", 
+    nombre: "", 
+    localidad: "", 
+    tiene_hermanos: "", 
+    telefono_alumno: "",
+    apellido_tutor: "", 
+    nombre_tutor: "", 
+    telefono_tutor: "", 
+    telefono_tutor2: "", 
+    curso: "",
+    establecimiento_anio_anterior: "", 
+    DNI_tutor: "", 
+    cuit_tutor: "", 
+    enfermedad_cronica: "", 
+    cual_enfermedad: "",
+    medicacion: "", 
+    cual_medicacion: "", 
+    correoElectronico: "", 
+    fecha_nacimiento: "", 
+    edad: "", 
+    lugar_nacimiento: "",
+    nacionalidad: "", 
+    domicilio: "", 
+    barrio: "", 
+    cod_postal: ""
   });
 
   const [newData, setNewData] = useState({
-    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-    apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-    establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-    medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+    foto: "", 
+    DNI: "", 
+    apellido: "", 
+    nombre: "", 
+    localidad: "", 
+    tiene_hermanos: "", 
+    telefono_alumno: "",
+    apellido_tutor: "", 
+    nombre_tutor: "", 
+    telefono_tutor: "", 
+    telefono_tutor2: "", 
+    curso: "",
+    establecimiento_anio_anterior: "", 
+    DNI_tutor: "", 
+    cuit_tutor: "", 
+    enfermedad_cronica: "", 
+    cual_enfermedad: "",
+    medicacion: "", 
+    cual_medicacion: "", 
+    correoElectronico: "", 
+    fecha_nacimiento: "", 
+    edad: "", 
+    lugar_nacimiento: "",
+    nacionalidad: "", 
+    domicilio: "", 
+    barrio: "", 
+    cod_postal: ""
   });
 
-  
+  const [secondSheetFormData, setSecondSheetFormData] = useState({
+    DNI: "",
+    apellido: "",
+    nombre: "",
+    curso: "", // curso actual del alumno
+    cursoMateria: "", // curso de la materia que adeuda
+    materia: "",
+    nota: "",
+    estado: ""
+  });
+
+  const [editingSecondSheetData, setEditingSecondSheetData] = useState(null);
+
+  const handleEditSecondSheet = (item) => {
+    setEditingSecondSheetData(item);
+    setSecondSheetFormData({
+      DNI: item.DNI,
+      apellido: item.apellido,
+      nombre: item.nombre,
+      curso: item.curso,
+      cursoMateria: item.cursoMateria,
+      materia: item.materia,
+      nota: item.nota,
+      estado: item.estado
+    });
+  };
+
+  const handleUpdateSecondSheet = () => {
+    const updatedData = secondSheetData.map(item => {
+      if (item.DNI === editingSecondSheetData.DNI && 
+          item.materia === editingSecondSheetData.materia) {
+        return { ...secondSheetFormData };
+      }
+      return item;
+    });
+
+    axios.put(`http://localhost:3001/proyecto/updateSecondSheetData`, updatedData)
+      .then(response => {
+        setSecondSheetData(updatedData);
+        setEditingSecondSheetData(null);
+        setSecondSheetFormData({
+          DNI: "",
+          apellido: "",
+          nombre: "",
+          curso: "",
+          cursoMateria: "",
+          materia: "",
+          nota: "",
+          estado: ""
+        });
+      })
+      .catch(error => {
+        console.error("Error al actualizar datos:", error);
+      });
+  };
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -84,6 +184,18 @@ const Dashboard = ({ onLogout }) => {
       })
       .catch(error => {
         console.error("Error al obtener los datos de prehevias: ", error);
+      });
+  }, []);
+
+  // Agregar nuevo useEffect para cargar datos de la segunda hoja
+  useEffect(() => {
+    axios.get("http://localhost:3001/proyecto/secondSheetData")
+      .then(response => {
+        console.log("Datos de la segunda hoja:", response.data);
+        setSecondSheetData(response.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener datos de la segunda hoja:", error);
       });
   }, []);
 
@@ -136,11 +248,33 @@ const Dashboard = ({ onLogout }) => {
       .then(response => {
         setDatos([...datos, response.data.data]);
         setNewData({
-          marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-          apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-          establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-          medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-          nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+          foto: "", 
+          DNI: "", 
+          apellido: "", 
+          nombre: "", 
+          localidad: "", 
+          tiene_hermanos: "", 
+          telefono_alumno: "",
+          apellido_tutor: "", 
+          nombre_tutor: "", 
+          telefono_tutor: "", 
+          telefono_tutor2: "", 
+          curso: "",
+          establecimiento_anio_anterior: "", 
+          DNI_tutor: "", 
+          cuit_tutor: "", 
+          enfermedad_cronica: "", 
+          cual_enfermedad: "",
+          medicacion: "", 
+          cual_medicacion: "", 
+          correoElectronico: "", 
+          fecha_nacimiento: "", 
+          edad: "", 
+          lugar_nacimiento: "",
+          nacionalidad: "", 
+          domicilio: "", 
+          barrio: "", 
+          cod_postal: ""
         });
       })
       .catch(error => {
@@ -202,6 +336,47 @@ const Dashboard = ({ onLogout }) => {
     event.currentTarget.classList.add('active');
   };
 
+  const handleSecondSheetSubmit = () => {
+    if (!secondSheetFormData.DNI || !secondSheetFormData.materia || !secondSheetFormData.nota || !secondSheetFormData.estado) {
+        alert("Por favor complete todos los campos requeridos");
+        return;
+    }
+
+    const estudiante = datos.find(d => d.DNI === secondSheetFormData.DNI);
+    if (estudiante) {
+        const newSecondSheetData = {
+            ...secondSheetFormData,
+            apellido: estudiante.apellido,
+            nombre: estudiante.nombre,
+            curso: estudiante.curso
+        };
+
+        axios.post("http://localhost:3001/proyecto/addOrUpdateSecondSheetData", newSecondSheetData)
+            .then(response => {
+                if (response.data.success) {
+                    alert("Datos agregados correctamente");
+                    setSecondSheetData([...secondSheetData, newSecondSheetData]);
+                    // Limpiar solo los campos de materia, nota y estado
+                    setSecondSheetFormData(prev => ({
+                        ...prev,
+                        materia: "",
+                        nota: "",
+                        estado: ""
+                    }));
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.data.error) {
+                    alert(error.response.data.error);
+                } else {
+                    alert("Error al agregar datos a la segunda hoja");
+                }
+            });
+    } else {
+        alert("DNI no encontrado en la primera hoja");
+    }
+};
+
   const isModalVisible = showPopup && selectedData !== null;
   return (
     <div className="container-fluid mt-1-">
@@ -246,6 +421,15 @@ const Dashboard = ({ onLogout }) => {
         }}
       >
         {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
+      </button>
+      <button 
+        className="btn btn-info square-button mx-2" 
+        onClick={(e) => {
+          handleSectionToggle("secondSheet");
+          toggleButtonClass(e);
+        }}
+      >
+        {activeSection === "secondSheet" ? "Ocultar" : "Segunda Hoja"}
       </button>
     </div>
 
@@ -374,6 +558,9 @@ const Dashboard = ({ onLogout }) => {
               <Nav.Item>
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="secondSheet">Segunda Hoja</Nav.Link>
+              </Nav.Item>
             </Nav>
             <Tab.Content>
               <Tab.Pane eventKey="informacionPersonal">
@@ -423,6 +610,24 @@ const Dashboard = ({ onLogout }) => {
                       />
                     </li>
                   ))}
+              </Tab.Pane>
+
+              {/* Sección Segunda Hoja */}
+              <Tab.Pane eventKey="secondSheet">
+                <h5>Datos de Segunda Hoja</h5>
+                <ul className="list-unstyled">
+                  {secondSheetData
+                    .filter(item => item.DNI === selectedData?.DNI)
+                    .map((item, index) => (
+                      <li key={index}>
+                        {Object.entries(item).map(([key, value]) => (
+                          <div key={key}>
+                            <strong>{key}:</strong> {value}
+                          </div>
+                        ))}
+                      </li>
+                  ))}
+                </ul>
               </Tab.Pane>
 
             </Tab.Content>
@@ -558,6 +763,9 @@ const Dashboard = ({ onLogout }) => {
               <Nav.Item>
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="secondSheet">Segunda Hoja</Nav.Link>
+              </Nav.Item>
             </Nav>
             <Tab.Content>
               <Tab.Pane eventKey="informacionPersonal">
@@ -602,6 +810,22 @@ const Dashboard = ({ onLogout }) => {
                   <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>                  
                   <li><strong>DNI tutor:</strong> {selectedData.DNI_tutor}</li>
                   <li><strong>Cuit tutor:</strong> {selectedData.cuit_tutor}</li>                  
+              </Tab.Pane>
+              <Tab.Pane eventKey="secondSheet">
+                <h5>Datos de Segunda Hoja</h5>
+                <ul className="list-unstyled">
+                  {secondSheetData
+                    .filter(item => item.DNI === selectedData?.DNI)
+                    .map((item, index) => (
+                      <li key={index}>
+                        {Object.entries(item).map(([key, value]) => (
+                          <div key={key}>
+                            <strong>{key}:</strong> {value}
+                          </div>
+                        ))}
+                      </li>
+                  ))}
+                </ul>
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
@@ -728,6 +952,158 @@ const Dashboard = ({ onLogout }) => {
           <button className="btn btn-primary mt-2" onClick={handleUpdate}>Guardar Cambios</button>
         </div>
         
+      )}
+
+      {activeSection === "secondSheet" && (
+        <div>
+          <h2>Datos de la Segunda Hoja</h2>
+          
+          {/* Formulario para agregar/editar datos */}
+          <div className="mb-4 p-3 border rounded">
+            <h4>{editingSecondSheetData ? "Editar Entrada" : "Agregar Nueva Entrada"}</h4>
+            <div className="row g-3">
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="DNI"
+                  value={secondSheetFormData.DNI}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    DNI: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Curso de la materia"
+                  value={secondSheetFormData.cursoMateria}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    cursoMateria: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Materia"
+                  value={secondSheetFormData.materia}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    materia: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nota"
+                  value={secondSheetFormData.nota}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    nota: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-3">
+                <select
+                  className="form-control"
+                  value={secondSheetFormData.estado}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    estado: e.target.value
+                  })}
+                >
+                  <option value="">Seleccionar Estado</option>
+                  <option value="Aprobado">Aprobado</option>
+                  <option value="Desaprobado">Desaprobado</option>
+                  <option value="Pendiente">Pendiente</option>
+                </select>
+              </div>
+              <div className="col-md-2">
+                {editingSecondSheetData ? (
+                  <div className="d-flex gap-2">
+                    <button 
+                      className="btn btn-success w-50"
+                      onClick={handleUpdateSecondSheet}
+                    >
+                      Actualizar
+                    </button>
+                    <button 
+                      className="btn btn-secondary w-50"
+                      onClick={() => {
+                        setEditingSecondSheetData(null);
+                        setSecondSheetFormData({
+                          DNI: "",
+                          apellido: "",
+                          nombre: "",
+                          curso: "",
+                          cursoMateria: "",
+                          materia: "",
+                          nota: "",
+                          estado: ""
+                        });
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="btn btn-primary w-100"
+                    onClick={handleSecondSheetSubmit}
+                  >
+                    Agregar
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Tabla de datos existentes */}
+          <table className="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>DNI</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Curso Actual</th>
+                <th>Curso Materia</th>
+                <th>Materia</th>
+                <th>Nota</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {secondSheetData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.DNI}</td>
+                  <td>{item.apellido}</td>
+                  <td>{item.nombre}</td>
+                  <td>{item.curso}</td>
+                  <td>{item.cursoMateria}</td>
+                  <td>{item.materia}</td>
+                  <td>{item.nota}</td>
+                  <td>{item.estado}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() => handleEditSecondSheet(item)}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
     
