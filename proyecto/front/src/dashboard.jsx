@@ -25,6 +25,9 @@ const Dashboard = ({ onLogout }) => {
   const [showModal, setShowModal] = useState(false);
   const { activeSection, handleSectionToggle } = useSectionToggle()
   const [preheviasData, setPreheviasData] = useState([]);
+  const [filterSecondSheetDNI, setFilterSecondSheetDNI] = useState("");
+  const [filterMateria, setFilterMateria] = useState("");
+  const [filterSecondSheetNombre, setFilterSecondSheetNombre] = useState("");
  
   const [formData, setFormData] = useState({
     foto: "", 
@@ -90,8 +93,7 @@ const Dashboard = ({ onLogout }) => {
     DNI: "",
     apellido: "",
     nombre: "",
-    curso: "", // curso actual del alumno
-    cursoMateria: "", // curso de la materia que adeuda
+    cursoMateria: "", // Solo mantenemos el curso de la materia
     materia: "",
     nota: "",
     estado: ""
@@ -105,7 +107,6 @@ const Dashboard = ({ onLogout }) => {
       DNI: item.DNI,
       apellido: item.apellido,
       nombre: item.nombre,
-      curso: item.curso,
       cursoMateria: item.cursoMateria,
       materia: item.materia,
       nota: item.nota,
@@ -130,7 +131,6 @@ const Dashboard = ({ onLogout }) => {
           DNI: "",
           apellido: "",
           nombre: "",
-          curso: "",
           cursoMateria: "",
           materia: "",
           nota: "",
@@ -347,8 +347,7 @@ const Dashboard = ({ onLogout }) => {
         const newSecondSheetData = {
             ...secondSheetFormData,
             apellido: estudiante.apellido,
-            nombre: estudiante.nombre,
-            curso: estudiante.curso
+            nombre: estudiante.nombre
         };
 
         axios.post("http://localhost:3001/proyecto/addOrUpdateSecondSheetData", newSecondSheetData)
@@ -376,6 +375,16 @@ const Dashboard = ({ onLogout }) => {
         alert("DNI no encontrado en la primera hoja");
     }
 };
+
+  const filteredSecondSheetData = () => {
+    return secondSheetData.filter((item) => {
+      const matchesDNI = filterSecondSheetDNI ? item.DNI.toString().includes(filterSecondSheetDNI) : true;
+      const matchesMateria = filterMateria ? item.materia.toLowerCase().includes(filterMateria.toLowerCase()) : true;
+      const matchesNombre = filterSecondSheetNombre ? 
+        `${item.nombre} ${item.apellido}`.toLowerCase().includes(filterSecondSheetNombre.toLowerCase()) : true;
+      return matchesDNI && matchesMateria && matchesNombre;
+    });
+  };
 
   const isModalVisible = showPopup && selectedData !== null;
   return (
@@ -958,6 +967,31 @@ const Dashboard = ({ onLogout }) => {
         <div>
           <h2>Datos de la Segunda Hoja</h2>
           
+          {/* Agregar filtros */}
+          <div className="d-flex mb-3">
+            <input
+              type="text"
+              placeholder="Filtrar por DNI"
+              className="form-control mx-1"
+              value={filterSecondSheetDNI}
+              onChange={(e) => setFilterSecondSheetDNI(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Materia"
+              className="form-control mx-1"
+              value={filterMateria}
+              onChange={(e) => setFilterMateria(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Nombre y Apellido"
+              className="form-control mx-1"
+              value={filterSecondSheetNombre}
+              onChange={(e) => setFilterSecondSheetNombre(e.target.value)}
+            />
+          </div>
+
           {/* Formulario para agregar/editar datos */}
           <div className="mb-4 p-3 border rounded">
             <h4>{editingSecondSheetData ? "Editar Entrada" : "Agregar Nueva Entrada"}</h4>
@@ -1042,7 +1076,6 @@ const Dashboard = ({ onLogout }) => {
                           DNI: "",
                           apellido: "",
                           nombre: "",
-                          curso: "",
                           cursoMateria: "",
                           materia: "",
                           nota: "",
@@ -1072,7 +1105,6 @@ const Dashboard = ({ onLogout }) => {
                 <th>DNI</th>
                 <th>Apellido</th>
                 <th>Nombre</th>
-                <th>Curso Actual</th>
                 <th>Curso Materia</th>
                 <th>Materia</th>
                 <th>Nota</th>
@@ -1081,12 +1113,11 @@ const Dashboard = ({ onLogout }) => {
               </tr>
             </thead>
             <tbody>
-              {secondSheetData.map((item, index) => (
+              {filteredSecondSheetData().map((item, index) => (
                 <tr key={index}>
                   <td>{item.DNI}</td>
                   <td>{item.apellido}</td>
                   <td>{item.nombre}</td>
-                  <td>{item.curso}</td>
                   <td>{item.cursoMateria}</td>
                   <td>{item.materia}</td>
                   <td>{item.nota}</td>
