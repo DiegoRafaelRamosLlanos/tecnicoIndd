@@ -304,14 +304,23 @@ const Dashboard = ({ onLogout }) => {
 
 
   const filteredData = () => {
-    return datos.filter((dato) => {
+    const data = datos.filter((dato) => {
       const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true;
       const matchesCurso = filterCurso ? dato.curso.includes(filterCurso) : true;
       const matchesNombreApellido = filterNombreApellido ?
         `${dato.nombre} ${dato.apellido}`.toLowerCase().includes(filterNombreApellido.toLowerCase()) : true;
       return matchesDNI && matchesCurso && matchesNombreApellido;
     });
+
+    // Si hay algún filtro activo, devolver todos los resultados filtrados
+    if (filterDNI || filterCurso || filterNombreApellido) {
+      return data;
+    }
+    
+    // Si no hay filtros, devolver solo los primeros 5 registros
+    return data.slice(0, 5);
   };
+
   const handleSaveChanges = () => {
     if (selectedData) {
       axios.put(`http://localhost:3001/proyecto/actualizarUsuario/${selectedData.id}`, selectedData)
@@ -379,13 +388,21 @@ const Dashboard = ({ onLogout }) => {
 };
 
   const filteredSecondSheetData = () => {
-    return secondSheetData.filter((item) => {
+    const data = secondSheetData.filter((item) => {
       const matchesDNI = filterSecondSheetDNI ? item.DNI.toString().includes(filterSecondSheetDNI) : true;
       const matchesMateria = filterMateria ? item.materia.toLowerCase().includes(filterMateria.toLowerCase()) : true;
       const matchesNombre = filterSecondSheetNombre ? 
         `${item.nombre} ${item.apellido}`.toLowerCase().includes(filterSecondSheetNombre.toLowerCase()) : true;
       return matchesDNI && matchesMateria && matchesNombre;
     });
+
+    // Si hay algún filtro activo, devolver todos los resultados filtrados
+    if (filterSecondSheetDNI || filterMateria || filterSecondSheetNombre) {
+      return data;
+    }
+    
+    // Si no hay filtros, devolver solo los primeros 5 registros
+    return data.slice(0, 5);
   };
 
   const isModalVisible = showPopup && selectedData !== null;
@@ -440,14 +457,14 @@ const Dashboard = ({ onLogout }) => {
           toggleButtonClass(e);
         }}
       >
-        {activeSection === "secondSheet" ? "Ocultar" : "Segunda Hoja"}
+        {activeSection === "secondSheet" ? "Ocultar" : "Previas"}
       </button>
     </div>
 
       {activeSection === "addData" && (
         <div>
           <div className="row g-0">
-            {Object.keys(newData).slice(0, 5).map((key, index) => (
+            {Object.keys(newData).slice(0, 4).map((key, index) => (
               <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
                 {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
                   <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
@@ -476,7 +493,6 @@ const Dashboard = ({ onLogout }) => {
       {activeSection === "modifyData" && (
         
         <div>
-          <h2>Lista de Datos</h2>
 
           <div className="d-flex mb-3">
             <input
@@ -684,8 +700,6 @@ const Dashboard = ({ onLogout }) => {
 
       {activeSection === "consultData" && (
         <div>
-          <h2>Lista de Datos</h2>
-
           <div className="d-flex mb-3">
             <input
               type="text"
@@ -709,6 +723,12 @@ const Dashboard = ({ onLogout }) => {
               onChange={(e) => setFilterNombreApellido(e.target.value)}
             />
           </div>
+          
+          {(!filterDNI && !filterCurso && !filterNombreApellido) && (
+            <p className="text-muted">
+              Mostrando los primeros 5 registros. Use los filtros para ver más resultados.
+            </p>
+          )}
 
           <table className="table table-striped table-bordered table-hover">
           <thead class="thead-dark">
@@ -873,7 +893,6 @@ const Dashboard = ({ onLogout }) => {
 
       {activeSection === "deleteData" && (
         <div>
-        <h2>Lista de Datos</h2>
 
         <div className="d-flex mb-3">
           <input
@@ -976,7 +995,6 @@ const Dashboard = ({ onLogout }) => {
 
       {activeSection === "secondSheet" && (
         <div>
-          <h2>Datos de la Segunda Hoja</h2>
           
           {/* Agregar filtros */}
           <div className="d-flex mb-3">
@@ -1002,6 +1020,12 @@ const Dashboard = ({ onLogout }) => {
               onChange={(e) => setFilterSecondSheetNombre(e.target.value)}
             />
           </div>
+
+          {(!filterSecondSheetDNI && !filterMateria && !filterSecondSheetNombre) && (
+            <p className="text-muted">
+              Mostrando los primeros 5 registros. Use los filtros para ver más resultados.
+            </p>
+          )}
 
           {/* Formulario para agregar/editar datos */}
           <div className="mb-4 p-3 border rounded">
