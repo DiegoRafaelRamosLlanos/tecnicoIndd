@@ -247,6 +247,7 @@ const Dashboard = ({ onLogout }) => {
     axios.post("http://localhost:3001/proyecto/registrarUsuario", newData)
       .then(response => {
         setDatos([...datos, response.data.data]);
+        alert('Alumno agregado exitosamente');
         setNewData({
           foto: "", 
           DNI: "", 
@@ -279,6 +280,7 @@ const Dashboard = ({ onLogout }) => {
       })
       .catch(error => {
         console.error("Error al registrar el nuevo dato:", error);
+        alert('Error al agregar el alumno');
       });
   };
 
@@ -568,7 +570,7 @@ const Dashboard = ({ onLogout }) => {
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="secondSheet">Segunda Hoja</Nav.Link>
+                <Nav.Link eventKey="secondSheet">Previas</Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content>
@@ -623,20 +625,31 @@ const Dashboard = ({ onLogout }) => {
 
               {/* Sección Segunda Hoja */}
               <Tab.Pane eventKey="secondSheet">
-                <h5>Datos de Segunda Hoja</h5>
-                <ul className="list-unstyled">
-                  {secondSheetData
-                    .filter(item => item.DNI === selectedData?.DNI)
-                    .map((item, index) => (
-                      <li key={index}>
-                        {Object.entries(item).map(([key, value]) => (
-                          <div key={key}>
-                            <strong>{key}:</strong> {value}
-                          </div>
-                        ))}
-                      </li>
-                  ))}
-                </ul>
+                <h5>Previas</h5>
+                <div className="table-responsive">
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Curso</th>
+                        <th>Materia</th>
+                        <th>Nota</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {secondSheetData
+                        .filter(item => item.DNI === selectedData?.DNI)
+                        .map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.cursoMateria}</td>
+                            <td>{item.materia}</td>
+                            <td>{item.nota}</td>
+                            <td>{item.estado}</td>
+                          </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Tab.Pane>
 
             </Tab.Content>
@@ -767,13 +780,10 @@ const Dashboard = ({ onLogout }) => {
                 <Nav.Link eventKey="informacionPersonal">Informacion Personal</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="prehevias">Prehevias</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="secondSheet">Segunda Hoja</Nav.Link>
+                <Nav.Link eventKey="secondSheet">Previas</Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content>
@@ -800,16 +810,6 @@ const Dashboard = ({ onLogout }) => {
                   <li><strong>Codigo postal:</strong> {selectedData.cod_postal}</li>
                 </ul>
               </Tab.Pane>
-              <Tab.Pane eventKey="prehevias">
-                <h5>Prehevias</h5>             
-                  <ul className="list-unstyled">
-                    {preheviasData.map((item, index) => (
-                      <li key={index}>
-                        <strong>{item.materia}:</strong> {item.estado}
-                      </li>
-                    ))}
-                  </ul>
-              </Tab.Pane>
               <Tab.Pane eventKey="tutor">
                 <h5>Tutor</h5>             
                   <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>
@@ -821,20 +821,31 @@ const Dashboard = ({ onLogout }) => {
                   <li><strong>Cuit tutor:</strong> {selectedData.cuit_tutor}</li>                  
               </Tab.Pane>
               <Tab.Pane eventKey="secondSheet">
-                <h5>Datos de Segunda Hoja</h5>
-                <ul className="list-unstyled">
-                  {secondSheetData
-                    .filter(item => item.DNI === selectedData?.DNI)
-                    .map((item, index) => (
-                      <li key={index}>
-                        {Object.entries(item).map(([key, value]) => (
-                          <div key={key}>
-                            <strong>{key}:</strong> {value}
-                          </div>
-                        ))}
-                      </li>
-                  ))}
-                </ul>
+                <h5>Previas</h5>
+                <div className="table-responsive">
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Curso</th>
+                        <th>Materia</th>
+                        <th>Nota</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {secondSheetData
+                        .filter(item => item.DNI === selectedData?.DNI)
+                        .map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.cursoMateria}</td>
+                            <td>{item.materia}</td>
+                            <td>{item.nota}</td>
+                            <td>{item.estado}</td>
+                          </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
