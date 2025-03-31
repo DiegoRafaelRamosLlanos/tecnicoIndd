@@ -1157,10 +1157,14 @@ const Dashboard = ({ onLogout }) => {
                   <td>{item.estado}</td>
                   <td>
                     <button
-                      className="btn btn-warning btn-sm"
+                      className={`btn btn-sm ${editingSecondSheetData?.DNI === item.DNI && 
+                        editingSecondSheetData?.materia === item.materia ? 
+                        'btn-success' : 'btn-warning'}`}
                       onClick={() => handleEditSecondSheet(item)}
                     >
-                      Editar
+                      {editingSecondSheetData?.DNI === item.DNI && 
+                       editingSecondSheetData?.materia === item.materia ? 
+                       'Editando...' : 'Editar'}
                     </button>
                   </td>
                 </tr>

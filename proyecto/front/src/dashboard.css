@@ -27,3 +27,20 @@
   background-color: #0056b3 !important; /* Color de fondo al pasar el ratón */
   transform: translateY(-2px) !important; /* Efecto de elevación */
 }
+
+/* Estilo para el botón de editar en la segunda hoja */
+.btn-warning:hover {
+  background-color: #ec971f !important;
+  border-color: #d58512 !important;
+}
+
+.btn-success {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background-color: #218838 !important;
+  border-color: #1e7e34 !important;
+}
