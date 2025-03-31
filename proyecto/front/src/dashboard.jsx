@@ -1022,9 +1022,7 @@ const Dashboard = ({ onLogout }) => {
           </div>
 
           {(!filterSecondSheetDNI && !filterMateria && !filterSecondSheetNombre) && (
-            <p className="text-muted">
-              Mostrando los primeros 5 registros. Use los filtros para ver más resultados.
-            </p>
+            <p className="text-muted"></p>
           )}
 
           {/* Formulario para agregar/editar datos */}
