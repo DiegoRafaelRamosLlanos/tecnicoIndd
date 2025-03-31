@@ -593,18 +593,49 @@ const Dashboard = ({ onLogout }) => {
               <Tab.Pane eventKey="informacionPersonal">
                 <ul className="list-unstyled">
                   {/* Campos editables */}
-                  {Object.entries(selectedData).map(([key, value]) => (
-                    key !== 'foto' && key !== 'DNI' && (
-                      <li key={key}>
-                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> 
-                        <input 
-                          type="text" 
-                          value={value} 
-                          onChange={(e) => handleInputChange(key, e.target.value)} 
-                        />
-                      </li>
-                    )
-                  ))}
+                  <li key="foto">
+                    <strong>Foto:</strong> 
+                    <input 
+                      type="text" 
+                      value={selectedData.foto || ''} 
+                      onChange={(e) => handleInputChange('foto', e.target.value)} 
+                    />
+                  </li>
+                  <li key="DNI">
+                    <strong>DNI:</strong> 
+                    <input 
+                      type="text" 
+                      value={selectedData.DNI || ''} 
+                      onChange={(e) => handleInputChange('DNI', e.target.value)} 
+                    />
+                  </li>
+                  {Object.entries(selectedData).map(([key, value]) => {
+                    // Lista de campos que no queremos mostrar aquí
+                    const excludedFields = [
+                      'foto', 
+                      'DNI', 
+                      'apellido_tutor', 
+                      'nombre_tutor', 
+                      'telefono_tutor', 
+                      'telefono_tutor2', 
+                      'DNI_tutor', 
+                      'cuit_tutor'
+                    ];
+                    
+                    if (!excludedFields.includes(key)) {
+                      return (
+                        <li key={key}>
+                          <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> 
+                          <input 
+                            type="text" 
+                            value={value} 
+                            onChange={(e) => handleInputChange(key, e.target.value)} 
+                          />
+                        </li>
+                      );
+                    }
+                    return null;
+                  })}
                 </ul>
               </Tab.Pane>
 

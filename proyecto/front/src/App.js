@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from './Login';
 import Dashboard from './dashboard';
+import SecretaryDashboard from './SecretaryDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -13,7 +14,6 @@ function App() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    
   };
 
   return (
@@ -24,14 +24,14 @@ function App() {
             path="/dashboard"
             element={isAuthenticated ? <Dashboard onLogout={handleLogout} /> : <Navigate to="/login" />}
           />
-
-
+          <Route
+            path="/secretaryDashboard"
+            element={isAuthenticated ? <SecretaryDashboard onLogout={handleLogout} /> : <Navigate to="/login" />}
+          />
           <Route
             path="/login"
             element={<Login onLogin={handleLogin} />}
           />
-
-          
           <Route
             path="*"
             element={<Navigate to="/login" />}
