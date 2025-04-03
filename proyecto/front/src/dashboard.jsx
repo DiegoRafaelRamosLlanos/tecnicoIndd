@@ -543,8 +543,7 @@ const Dashboard = ({ onLogout }) => {
                     <td>{dato.curso}</td>
                     <td style={{ textAlign: 'center', display: 'flex', alignItems: 'center' }}>
                       <button
-                        className="btn btn-primary"
-                        style={{ padding: '36px 20px', fontSize: '30px' }}
+                        className="btn btn-info"
                         onClick={() => toggleRow(dato)}
                       >
                           {showModal === dato.id
@@ -1186,17 +1185,31 @@ const Dashboard = ({ onLogout }) => {
                   <td>{item.materia}</td>
                   <td>{item.nota}</td>
                   <td>{item.estado}</td>
-                  <td>
-                    <button
-                      className={`btn btn-sm ${editingSecondSheetData?.DNI === item.DNI && 
-                        editingSecondSheetData?.materia === item.materia ? 
-                        'btn-success' : 'btn-warning'}`}
-                      onClick={() => handleEditSecondSheet(item)}
-                    >
-                      {editingSecondSheetData?.DNI === item.DNI && 
-                       editingSecondSheetData?.materia === item.materia ? 
-                       'Editando...' : 'Editar'}
-                    </button>
+                  <td style={{ 
+                      padding: '0',
+                      verticalAlign: 'middle',
+                      height: '100%',
+                      minHeight: '50px'
+                  }}>
+                      <div style={{ 
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%',
+                          minHeight: 'inherit'
+                      }}>
+                          <button
+                              className={`btn btn-sm ${editingSecondSheetData?.DNI === item.DNI && 
+                                  editingSecondSheetData?.materia === item.materia ? 
+                                  'btn-success' : 'btn-warning'}`}
+                              style={{ margin: 'auto' }}
+                              onClick={() => handleEditSecondSheet(item)}
+                          >
+                              {editingSecondSheetData?.DNI === item.DNI && 
+                              editingSecondSheetData?.materia === item.materia ? 
+                              'Editando...' : 'Editar'}
+                          </button>
+                      </div>
                   </td>
                 </tr>
               ))}
