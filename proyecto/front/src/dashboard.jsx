@@ -2,44 +2,88 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
-import {  Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
+import { Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
 import useSectionToggle from "./sectionToggle"; // Ruta al para controlar botones
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({ onLogout }) => {
   const [datos, setDatos] = useState([]);
+  const [secondSheetData, setSecondSheetData] = useState([]); // Nuevo estado
   const [showPopup, setShowPopup] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [filterDNI, setFilterDNI] = useState("");
   const [filterCurso, setFilterCurso] = useState("");
   const [filterNombreApellido, setFilterNombreApellido] = useState("");
   const [editingData, setEditingData] = useState(null);
-  /*const [showTable, setShowTable] = useState(false);
-  const [showList, setShowList ] = useState(false);
-  const [showFirstList, setShowFirstList] = useState(false);
-  const [showSecondList, setShowSecondList] = useState(false);
-  const [showThirdList, setShowThirdList] = useState(false);*/
   const [expandedRow, setExpandedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { activeSection, handleSectionToggle } = useSectionToggle()
   const [preheviasData, setPreheviasData] = useState([]);
+  const [filterSecondSheetDNI, setFilterSecondSheetDNI] = useState("");
+  const [filterMateria, setFilterMateria] = useState("");
+  const [filterSecondSheetNombre, setFilterSecondSheetNombre] = useState("");
  
   const [formData, setFormData] = useState({
-    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-    apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-    establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-    medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+    foto: "", 
+    DNI: "", 
+    apellido: "", 
+    nombre: "", 
+    localidad: "", 
+    tiene_hermanos: "", 
+    telefono_alumno: "",
+    apellido_tutor: "", 
+    nombre_tutor: "", 
+    telefono_tutor: "", 
+    telefono_tutor2: "", 
+    curso: "",
+    establecimiento_anio_anterior: "", 
+    DNI_tutor: "", 
+    cuit_tutor: "", 
+    enfermedad_cronica: "", 
+    cual_enfermedad: "",
+    medicacion: "", 
+    cual_medicacion: "", 
+    correoElectronico: "", 
+    fecha_nacimiento: "", 
+    edad: "", 
+    lugar_nacimiento: "",
+    nacionalidad: "", 
+    domicilio: "", 
+    barrio: "", 
+    cod_postal: ""
   });
 
   const [newData, setNewData] = useState({
-    marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-    apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-    establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-    medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-    nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+    foto: "", 
+    DNI: "", 
+    apellido: "", 
+    nombre: "", 
+    localidad: "", 
+    tiene_hermanos: "", 
+    telefono_alumno: "",
+    apellido_tutor: "", 
+    nombre_tutor: "", 
+    telefono_tutor: "", 
+    telefono_tutor2: "", 
+    curso: "",
+    establecimiento_anio_anterior: "", 
+    DNI_tutor: "", 
+    cuit_tutor: "", 
+    enfermedad_cronica: "", 
+    cual_enfermedad: "",
+    medicacion: "", 
+    cual_medicacion: "", 
+    correoElectronico: "", 
+    fecha_nacimiento: "", 
+    edad: "", 
+    lugar_nacimiento: "",
+    nacionalidad: "", 
+    domicilio: "", 
+    barrio: "", 
+    cod_postal: ""
   });
+<<<<<<< HEAD
   const [formData2, setFormData2] = useState({
      DNI: "", apellido: "", nombre: "", curso: "", materia: "",nota:"", estado: ""
     });
@@ -47,6 +91,62 @@ const Dashboard = ({ onLogout }) => {
     DNI: "", apellido: "", nombre: "", curso: "", materia: "",nota:"", estado: ""
     });
   
+=======
+
+  const [secondSheetFormData, setSecondSheetFormData] = useState({
+    DNI: "",
+    apellido: "",
+    nombre: "",
+    cursoMateria: "", // Solo mantenemos el curso de la materia
+    materia: "",
+    nota: "",
+    estado: ""
+  });
+
+  const [editingSecondSheetData, setEditingSecondSheetData] = useState(null);
+
+  const handleEditSecondSheet = (item) => {
+    setEditingSecondSheetData(item);
+    setSecondSheetFormData({
+      DNI: item.DNI,
+      apellido: item.apellido,
+      nombre: item.nombre,
+      cursoMateria: item.cursoMateria,
+      materia: item.materia,
+      nota: item.nota,
+      estado: item.estado
+    });
+  };
+
+  const handleUpdateSecondSheet = () => {
+    const updatedData = secondSheetData.map(item => {
+      if (item.DNI === editingSecondSheetData.DNI && 
+          item.materia === editingSecondSheetData.materia) {
+        return { ...secondSheetFormData };
+      }
+      return item;
+    });
+
+    axios.put(`http://localhost:3001/proyecto/updateSecondSheetData`, updatedData)
+      .then(response => {
+        setSecondSheetData(updatedData);
+        setEditingSecondSheetData(null);
+        setSecondSheetFormData({
+          DNI: "",
+          apellido: "",
+          nombre: "",
+          cursoMateria: "",
+          materia: "",
+          nota: "",
+          estado: ""
+        });
+      })
+      .catch(error => {
+        console.error("Error al actualizar datos:", error);
+      });
+  };
+
+>>>>>>> rafael
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -89,6 +189,18 @@ const Dashboard = ({ onLogout }) => {
       })
       .catch(error => {
         console.error("Error al obtener los datos de prehevias: ", error);
+      });
+  }, []);
+
+  // Agregar nuevo useEffect para cargar datos de la segunda hoja
+  useEffect(() => {
+    axios.get("http://localhost:3001/proyecto/secondSheetData")
+      .then(response => {
+        console.log("Datos de la segunda hoja:", response.data);
+        setSecondSheetData(response.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener datos de la segunda hoja:", error);
       });
   }, []);
 
@@ -140,16 +252,40 @@ const Dashboard = ({ onLogout }) => {
     axios.post("http://localhost:3001/proyecto/registrarUsuario", newData)
       .then(response => {
         setDatos([...datos, response.data.data]);
+        alert('Alumno agregado exitosamente');
         setNewData({
-          marca_temporal: "", foto: "", DNI: "", apellido: "", nombre: "", localidad: "", tiene_hermanos: "", telefono_alumno: "",
-          apellido_tutor: "", nombre_tutor: "", telefono_tutor: "", telefono_tutor2: "", curso: "",
-          establecimiento_anio_anterior: "", DNI_tutor: "", cuit_tutor: "", enfermedad_cronica: "", cual_enfermedad: "",
-          medicacion: "", cual_medicacion: "", correoElectronico: "", fecha_nacimiento: "", edad: "", lugar_nacimiento: "",
-          nacionalidad: "", domicilio: "", barrio: "", cod_postal: ""
+          foto: "", 
+          DNI: "", 
+          apellido: "", 
+          nombre: "", 
+          localidad: "", 
+          tiene_hermanos: "", 
+          telefono_alumno: "",
+          apellido_tutor: "", 
+          nombre_tutor: "", 
+          telefono_tutor: "", 
+          telefono_tutor2: "", 
+          curso: "",
+          establecimiento_anio_anterior: "", 
+          DNI_tutor: "", 
+          cuit_tutor: "", 
+          enfermedad_cronica: "", 
+          cual_enfermedad: "",
+          medicacion: "", 
+          cual_medicacion: "", 
+          correoElectronico: "", 
+          fecha_nacimiento: "", 
+          edad: "", 
+          lugar_nacimiento: "",
+          nacionalidad: "", 
+          domicilio: "", 
+          barrio: "", 
+          cod_postal: ""
         });
       })
       .catch(error => {
         console.error("Error al registrar el nuevo dato:", error);
+        alert('Error al agregar el alumno');
       });
   };
   const handleNewDataSubmit2 = () => {
@@ -185,14 +321,23 @@ const Dashboard = ({ onLogout }) => {
 
 
   const filteredData = () => {
-    return datos.filter((dato) => {
+    const data = datos.filter((dato) => {
       const matchesDNI = filterDNI ? dato.DNI.toString().includes(filterDNI) : true;
       const matchesCurso = filterCurso ? dato.curso.includes(filterCurso) : true;
       const matchesNombreApellido = filterNombreApellido ?
         `${dato.nombre} ${dato.apellido}`.toLowerCase().includes(filterNombreApellido.toLowerCase()) : true;
       return matchesDNI && matchesCurso && matchesNombreApellido;
     });
+
+    // Si hay algún filtro activo, devolver todos los resultados filtrados
+    if (filterDNI || filterCurso || filterNombreApellido) {
+      return data;
+    }
+    
+    // Si no hay filtros, devolver solo los primeros 5 registros
+    return data.slice(0, 5);
   };
+
   const handleSaveChanges = () => {
     if (selectedData) {
       axios.put(`http://localhost:3001/proyecto/actualizarUsuario/${selectedData.id}`, selectedData)
@@ -219,6 +364,64 @@ const Dashboard = ({ onLogout }) => {
     event.currentTarget.classList.add('active');
   };
 
+  const handleSecondSheetSubmit = () => {
+    if (!secondSheetFormData.DNI || !secondSheetFormData.materia || !secondSheetFormData.nota || !secondSheetFormData.estado) {
+        alert("Por favor complete todos los campos requeridos");
+        return;
+    }
+
+    const estudiante = datos.find(d => d.DNI === secondSheetFormData.DNI);
+    if (estudiante) {
+        const newSecondSheetData = {
+            ...secondSheetFormData,
+            apellido: estudiante.apellido,
+            nombre: estudiante.nombre
+        };
+
+        axios.post("http://localhost:3001/proyecto/addOrUpdateSecondSheetData", newSecondSheetData)
+            .then(response => {
+                if (response.data.success) {
+                    alert("Datos agregados correctamente");
+                    setSecondSheetData([...secondSheetData, newSecondSheetData]);
+                    // Limpiar solo los campos de materia, nota y estado
+                    setSecondSheetFormData(prev => ({
+                        ...prev,
+                        materia: "",
+                        nota: "",
+                        estado: ""
+                    }));
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.data.error) {
+                    alert(error.response.data.error);
+                } else {
+                    alert("Error al agregar datos a la segunda hoja");
+                }
+            });
+    } else {
+        alert("DNI no encontrado en la primera hoja");
+    }
+};
+
+  const filteredSecondSheetData = () => {
+    const data = secondSheetData.filter((item) => {
+      const matchesDNI = filterSecondSheetDNI ? item.DNI.toString().includes(filterSecondSheetDNI) : true;
+      const matchesMateria = filterMateria ? item.materia.toLowerCase().includes(filterMateria.toLowerCase()) : true;
+      const matchesNombre = filterSecondSheetNombre ? 
+        `${item.nombre} ${item.apellido}`.toLowerCase().includes(filterSecondSheetNombre.toLowerCase()) : true;
+      return matchesDNI && matchesMateria && matchesNombre;
+    });
+
+    // Si hay algún filtro activo, devolver todos los resultados filtrados
+    if (filterSecondSheetDNI || filterMateria || filterSecondSheetNombre) {
+      return data;
+    }
+    
+    // Si no hay filtros, devolver solo los primeros 5 registros
+    return data.slice(0, 5);
+  };
+
   const isModalVisible = showPopup && selectedData !== null;
   return (
     <div className="container-fluid mt-1-">
@@ -226,10 +429,10 @@ const Dashboard = ({ onLogout }) => {
       <button className="btn btn-success btn-lg btn-block" onClick={exportToPDF}>Exportar a PDF</button>
 */}
 
-<h4>Agregar Nuevo Dato</h4>
     <div className="d-flex justify-content-center mb-4"> {/* Contenedor para centrar los botones */}
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Agregar nuevo estudiante"
         onClick={(e) => {handleSectionToggle("addData")
           toggleButtonClass(e);
         }}
@@ -239,6 +442,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Modificar datos existentes"
         onClick={(e) => {
           handleSectionToggle("modifyData");
           toggleButtonClass(e);
@@ -248,6 +452,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Ver información detallada"
         onClick={(e) => {
           handleSectionToggle("consultData");
           toggleButtonClass(e);
@@ -257,6 +462,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Eliminar registros"
         onClick={(e) => {
           handleSectionToggle("deleteData");
           toggleButtonClass(e);
@@ -264,12 +470,26 @@ const Dashboard = ({ onLogout }) => {
       >
         {activeSection === "deleteData" ? "Ocultar" : "Eliminar"}
       </button>
+      <button 
+        className="btn btn-info square-button mx-2" 
+        data-description="Gestionar materias previas"
+        onClick={(e) => {
+          handleSectionToggle("secondSheet");
+          toggleButtonClass(e);
+        }}
+      >
+        {activeSection === "secondSheet" ? "Ocultar" : "Previas"}
+      </button>
     </div>
 
       {activeSection === "addData" && (
         <div>
           <div className="row g-0">
+<<<<<<< HEAD
             {Object.keys(newData || newData2).slice(0, 5).map((key, index) => (
+=======
+            {Object.keys(newData).slice(0, 4).map((key, index) => (
+>>>>>>> rafael
               <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
                 {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
                   <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
@@ -298,7 +518,6 @@ const Dashboard = ({ onLogout }) => {
       {activeSection === "modifyData" && (
         
         <div>
-          <h2>Lista de Datos</h2>
 
           <div className="d-flex mb-3">
             <input
@@ -349,8 +568,7 @@ const Dashboard = ({ onLogout }) => {
                     <td>{dato.curso}</td>
                     <td style={{ textAlign: 'center', display: 'flex', alignItems: 'center' }}>
                       <button
-                        className="btn btn-primary"
-                        style={{ padding: '36px 20px', fontSize: '30px' }}
+                        className="btn btn-info"
                         onClick={() => toggleRow(dato)}
                       >
                           {showModal === dato.id
@@ -391,23 +609,57 @@ const Dashboard = ({ onLogout }) => {
               <Nav.Item>
                 <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="secondSheet">Previas</Nav.Link>
+              </Nav.Item>
             </Nav>
             <Tab.Content>
               <Tab.Pane eventKey="informacionPersonal">
                 <ul className="list-unstyled">
                   {/* Campos editables */}
-                  {Object.entries(selectedData).map(([key, value]) => (
-                    key !== 'foto' && key !== 'DNI' && (
-                      <li key={key}>
-                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> 
-                        <input 
-                          type="text" 
-                          value={value} 
-                          onChange={(e) => handleInputChange(key, e.target.value)} 
-                        />
-                      </li>
-                    )
-                  ))}
+                  <li key="foto">
+                    <strong>Foto:</strong> 
+                    <input 
+                      type="text" 
+                      value={selectedData.foto || ''} 
+                      onChange={(e) => handleInputChange('foto', e.target.value)} 
+                    />
+                  </li>
+                  <li key="DNI">
+                    <strong>DNI:</strong> 
+                    <input 
+                      type="text" 
+                      value={selectedData.DNI || ''} 
+                      onChange={(e) => handleInputChange('DNI', e.target.value)} 
+                    />
+                  </li>
+                  {Object.entries(selectedData).map(([key, value]) => {
+                    // Lista de campos que no queremos mostrar aquí
+                    const excludedFields = [
+                      'foto', 
+                      'DNI', 
+                      'apellido_tutor', 
+                      'nombre_tutor', 
+                      'telefono_tutor', 
+                      'telefono_tutor2', 
+                      'DNI_tutor', 
+                      'cuit_tutor'
+                    ];
+                    
+                    if (!excludedFields.includes(key)) {
+                      return (
+                        <li key={key}>
+                          <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> 
+                          <input 
+                            type="text" 
+                            value={value} 
+                            onChange={(e) => handleInputChange(key, e.target.value)} 
+                          />
+                        </li>
+                      );
+                    }
+                    return null;
+                  })}
                 </ul>
               </Tab.Pane>
 
@@ -442,6 +694,35 @@ const Dashboard = ({ onLogout }) => {
                   ))}
               </Tab.Pane>
 
+              {/* Sección Segunda Hoja */}
+              <Tab.Pane eventKey="secondSheet">
+                <h5>Previas</h5>
+                <div className="table-responsive">
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Curso</th>
+                        <th>Materia</th>
+                        <th>Nota</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {secondSheetData
+                        .filter(item => item.DNI === selectedData?.DNI)
+                        .map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.cursoMateria}</td>
+                            <td>{item.materia}</td>
+                            <td>{item.nota}</td>
+                            <td data-estado={item.estado}>{item.estado}</td>
+                          </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Tab.Pane>
+
             </Tab.Content>
           </Tab.Container>
         </Card.Body>
@@ -474,8 +755,6 @@ const Dashboard = ({ onLogout }) => {
 
       {activeSection === "consultData" && (
         <div>
-          <h2>Lista de Datos</h2>
-
           <div className="d-flex mb-3">
             <input
               type="text"
@@ -499,6 +778,12 @@ const Dashboard = ({ onLogout }) => {
               onChange={(e) => setFilterNombreApellido(e.target.value)}
             />
           </div>
+          
+          {(!filterDNI && !filterCurso && !filterNombreApellido) && (
+            <p className="text-muted">
+              Mostrando los primeros 5 registros. Use los filtros para ver más resultados.
+            </p>
+          )}
 
           <table className="table table-striped table-bordered table-hover">
           <thead class="thead-dark">
@@ -570,10 +855,10 @@ const Dashboard = ({ onLogout }) => {
                 <Nav.Link eventKey="informacionPersonal">Informacion Personal</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="prehevias">Prehevias</Nav.Link>
+                <Nav.Link eventKey="tutor">Tutor</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="tutor">Tutor</Nav.Link>
+                <Nav.Link eventKey="secondSheet">Previas</Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content>
@@ -600,16 +885,6 @@ const Dashboard = ({ onLogout }) => {
                   <li><strong>Codigo postal:</strong> {selectedData.cod_postal}</li>
                 </ul>
               </Tab.Pane>
-              <Tab.Pane eventKey="prehevias">
-                <h5>Prehevias</h5>             
-                  <ul className="list-unstyled">
-                    {preheviasData.map((item, index) => (
-                      <li key={index}>
-                        <strong>{item.materia}:</strong> {item.estado}
-                      </li>
-                    ))}
-                  </ul>
-              </Tab.Pane>
               <Tab.Pane eventKey="tutor">
                 <h5>Tutor</h5>             
                   <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>
@@ -619,6 +894,33 @@ const Dashboard = ({ onLogout }) => {
                   <li><strong>Apellido del tutor:</strong> {selectedData.apellido_tutor}</li>                  
                   <li><strong>DNI tutor:</strong> {selectedData.DNI_tutor}</li>
                   <li><strong>Cuit tutor:</strong> {selectedData.cuit_tutor}</li>                  
+              </Tab.Pane>
+              <Tab.Pane eventKey="secondSheet">
+                <h5>Previas</h5>
+                <div className="table-responsive">
+                  <table className="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Curso</th>
+                        <th>Materia</th>
+                        <th>Nota</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {secondSheetData
+                        .filter(item => item.DNI === selectedData?.DNI)
+                        .map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.cursoMateria}</td>
+                            <td>{item.materia}</td>
+                            <td>{item.nota}</td>
+                            <td data-estado={item.estado}>{item.estado}</td>
+                          </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
@@ -646,7 +948,6 @@ const Dashboard = ({ onLogout }) => {
 
       {activeSection === "deleteData" && (
         <div>
-        <h2>Lista de Datos</h2>
 
         <div className="d-flex mb-3">
           <input
@@ -745,6 +1046,201 @@ const Dashboard = ({ onLogout }) => {
           <button className="btn btn-primary mt-2" onClick={handleUpdate}>Guardar Cambios</button>
         </div>
         
+      )}
+
+      {activeSection === "secondSheet" && (
+        <div>
+          
+          {/* Agregar filtros */}
+          <div className="d-flex mb-3">
+            <input
+              type="text"
+              placeholder="Filtrar por DNI"
+              className="form-control mx-1"
+              value={filterSecondSheetDNI}
+              onChange={(e) => setFilterSecondSheetDNI(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Materia"
+              className="form-control mx-1"
+              value={filterMateria}
+              onChange={(e) => setFilterMateria(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Filtrar por Nombre y Apellido"
+              className="form-control mx-1"
+              value={filterSecondSheetNombre}
+              onChange={(e) => setFilterSecondSheetNombre(e.target.value)}
+            />
+          </div>
+
+          {(!filterSecondSheetDNI && !filterMateria && !filterSecondSheetNombre) && (
+            <p className="text-muted"></p>
+          )}
+
+          {/* Formulario para agregar/editar datos */}
+          <div className="mb-4 p-3 border rounded">
+            <h4>{editingSecondSheetData ? "Editar Entrada" : "Agregar Nueva Entrada"}</h4>
+            <div className="row g-3">
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="DNI"
+                  value={secondSheetFormData.DNI}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    DNI: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Curso de la materia"
+                  value={secondSheetFormData.cursoMateria}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    cursoMateria: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Materia"
+                  value={secondSheetFormData.materia}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    materia: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nota"
+                  value={secondSheetFormData.nota}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    nota: e.target.value
+                  })}
+                />
+              </div>
+              <div className="col-md-3">
+                <select
+                  className="form-control"
+                  value={secondSheetFormData.estado}
+                  onChange={(e) => setSecondSheetFormData({
+                    ...secondSheetFormData,
+                    estado: e.target.value
+                  })}
+                >
+                  <option value="">Seleccionar Estado</option>
+                  <option value="Aprobado">Aprobado</option>
+                  <option value="Desaprobado">Desaprobado</option>
+                  <option value="Pendiente">Pendiente</option>
+                </select>
+              </div>
+              <div className="col-md-2">
+                {editingSecondSheetData ? (
+                  <div className="d-flex gap-2">
+                    <button 
+                      className="btn btn-success w-50"
+                      onClick={handleUpdateSecondSheet}
+                    >
+                      Actualizar
+                    </button>
+                    <button 
+                      className="btn btn-secondary w-50"
+                      onClick={() => {
+                        setEditingSecondSheetData(null);
+                        setSecondSheetFormData({
+                          DNI: "",
+                          apellido: "",
+                          nombre: "",
+                          cursoMateria: "",
+                          materia: "",
+                          nota: "",
+                          estado: ""
+                        });
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="btn btn-primary w-100"
+                    onClick={handleSecondSheetSubmit}
+                  >
+                    Agregar
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Tabla de datos existentes */}
+          <table className="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>DNI</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Curso Materia</th>
+                <th>Materia</th>
+                <th>Nota</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSecondSheetData().map((item, index) => (
+                <tr key={index}>
+                  <td>{item.DNI}</td>
+                  <td>{item.apellido}</td>
+                  <td>{item.nombre}</td>
+                  <td>{item.cursoMateria}</td>
+                  <td>{item.materia}</td>
+                  <td>{item.nota}</td>
+                  <td data-estado={item.estado}>{item.estado}</td>
+                  <td style={{ 
+                      padding: '0',
+                      verticalAlign: 'middle',
+                      height: '100%',
+                      minHeight: '50px'
+                  }}>
+                      <div style={{ 
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%',
+                          minHeight: 'inherit'
+                      }}>
+                          <button
+                              className={`btn btn-sm ${editingSecondSheetData?.DNI === item.DNI && 
+                                  editingSecondSheetData?.materia === item.materia ? 
+                                  'btn-success' : 'btn-warning'}`}
+                              style={{ margin: 'auto' }}
+                              onClick={() => handleEditSecondSheet(item)}
+                          >
+                              {editingSecondSheetData?.DNI === item.DNI && 
+                              editingSecondSheetData?.materia === item.materia ? 
+                              'Editando...' : 'Editar'}
+                          </button>
+                      </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
     
