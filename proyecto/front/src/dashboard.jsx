@@ -652,7 +652,8 @@ const Dashboard = ({ onLogout }) => {
                       'telefono_tutor', 
                       'telefono_tutor2', 
                       'DNI_tutor', 
-                      'cuit_tutor'
+                      'cuit_tutor',
+                      'marca_temporal'
                     ];
                     
                     if (!excludedFields.includes(key)) {
