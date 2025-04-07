@@ -65,8 +65,8 @@ const SecretaryDashboard = ({ onLogout }) => {
   };
 
   return (
-    <div className="container-fluid mt-4">
-      <div className="text-center mb-4">
+    <div className="container-fluid mt-2">
+      <div className="d-flex justify-content-center mb-2">
         <button 
           className="btn btn-danger square-button" 
           style={{
@@ -74,7 +74,7 @@ const SecretaryDashboard = ({ onLogout }) => {
             height: '60px',
             borderRadius: '10px',
             fontSize: '1.2em',
-            marginBottom: '20px'
+            marginBottom: '10px'
           }} 
           onClick={handleLogout}
         >
@@ -106,11 +106,7 @@ const SecretaryDashboard = ({ onLogout }) => {
         />
       </div>
 
-      {(!filterDNI && !filterCurso && !filterNombreApellido) && (
-        <p className="text-muted">
-          Mostrando los primeros 5 registros. Use los filtros para ver más resultados.
-        </p>
-      )}
+      {(!filterDNI && !filterCurso && !filterNombreApellido)}
 
       <table className="table table-striped table-bordered table-hover">
         <thead className="thead-dark">
