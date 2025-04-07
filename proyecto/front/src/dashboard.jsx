@@ -407,10 +407,10 @@ const Dashboard = ({ onLogout }) => {
       <button className="btn btn-success btn-lg btn-block" onClick={exportToPDF}>Exportar a PDF</button>
 */}
 
-<h4>Agregar Nuevo Dato</h4>
     <div className="d-flex justify-content-center mb-4"> {/* Contenedor para centrar los botones */}
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Agregar nuevo estudiante"
         onClick={(e) => {handleSectionToggle("addData")
           toggleButtonClass(e);
         }}
@@ -420,6 +420,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Modificar datos existentes"
         onClick={(e) => {
           handleSectionToggle("modifyData");
           toggleButtonClass(e);
@@ -429,6 +430,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Ver información detallada"
         onClick={(e) => {
           handleSectionToggle("consultData");
           toggleButtonClass(e);
@@ -438,6 +440,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Eliminar registros"
         onClick={(e) => {
           handleSectionToggle("deleteData");
           toggleButtonClass(e);
@@ -447,6 +450,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
       <button 
         className="btn btn-info square-button mx-2" 
+        data-description="Gestionar materias previas"
         onClick={(e) => {
           handleSectionToggle("secondSheet");
           toggleButtonClass(e);
