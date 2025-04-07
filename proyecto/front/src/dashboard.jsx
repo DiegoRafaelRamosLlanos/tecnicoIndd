@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
-import {  Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
+import { Modal, Button, Card, Row, Col, Nav, Tab } from 'react-bootstrap';
 import useSectionToggle from "./sectionToggle"; // Ruta al para controlar botones
 import './dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,11 +16,6 @@ const Dashboard = ({ onLogout }) => {
   const [filterCurso, setFilterCurso] = useState("");
   const [filterNombreApellido, setFilterNombreApellido] = useState("");
   const [editingData, setEditingData] = useState(null);
-  /*const [showTable, setShowTable] = useState(false);
-  const [showList, setShowList ] = useState(false);
-  const [showFirstList, setShowFirstList] = useState(false);
-  const [showSecondList, setShowSecondList] = useState(false);
-  const [showThirdList, setShowThirdList] = useState(false);*/
   const [expandedRow, setExpandedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { activeSection, handleSectionToggle } = useSectionToggle()
@@ -690,7 +685,7 @@ const Dashboard = ({ onLogout }) => {
                             <td>{item.cursoMateria}</td>
                             <td>{item.materia}</td>
                             <td>{item.nota}</td>
-                            <td>{item.estado}</td>
+                            <td data-estado={item.estado}>{item.estado}</td>
                           </tr>
                       ))}
                     </tbody>
@@ -890,7 +885,7 @@ const Dashboard = ({ onLogout }) => {
                             <td>{item.cursoMateria}</td>
                             <td>{item.materia}</td>
                             <td>{item.nota}</td>
-                            <td>{item.estado}</td>
+                            <td data-estado={item.estado}>{item.estado}</td>
                           </tr>
                       ))}
                     </tbody>
@@ -1184,7 +1179,7 @@ const Dashboard = ({ onLogout }) => {
                   <td>{item.cursoMateria}</td>
                   <td>{item.materia}</td>
                   <td>{item.nota}</td>
-                  <td>{item.estado}</td>
+                  <td data-estado={item.estado}>{item.estado}</td>
                   <td style={{ 
                       padding: '0',
                       verticalAlign: 'middle',
