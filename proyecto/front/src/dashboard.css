@@ -220,7 +220,6 @@ td[data-estado="Pendiente"] {
   font-weight: 600;
 }
 
-
 /* Estilos específicos para el formulario de agregar datos */
 .mb-4.p-4.border.rounded.bg-white {
   background: linear-gradient(to bottom, #ffffff, #f8f9fa);
@@ -281,4 +280,114 @@ select.form-control {
 select.form-control:focus {
   border-color: #2c3e50;
   box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
+}
+
+/* Estilos para los Modal/Popups */
+.modal-content {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+}
+
+.modal-header {
+  background: linear-gradient(145deg, #2c3e50, #3498db);
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom: none;
+  padding: 1.5rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.modal-header .close {
+  color: white;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.modal-header .close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.modal-body .card {
+  border: none;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+.modal-body .card-header {
+  background: linear-gradient(145deg, #3498db, #2c3e50);
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 1.5rem;
+}
+
+.modal-body .nav-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.modal-body .nav-tabs .nav-link {
+  color: #2c3e50;
+  font-weight: 500;
+  border: none;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.modal-body .nav-tabs .nav-link:hover {
+  border: none;
+  color: #3498db;
+}
+
+.modal-body .nav-tabs .nav-link.active {
+  color: #3498db;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #3498db;
+}
+
+.modal-body .list-unstyled li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-body .list-unstyled li:last-child {
+  border-bottom: none;
+}
+
+.modal-body .list-unstyled strong {
+  color: #2c3e50;
+  margin-right: 0.5rem;
+}
+
+.modal-footer .btn {
+  padding: 0.5rem 2rem;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.modal-footer .btn-secondary {
+  background: linear-gradient(145deg, #6c757d, #5a6268);
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.modal-footer .btn-secondary:hover {
+  background: linear-gradient(145deg, #5a6268, #6c757d);
+  transform: translateY(-1px);
 }

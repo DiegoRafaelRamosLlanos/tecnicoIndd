@@ -231,9 +231,6 @@ const SecretaryDashboard = ({ onLogout }) => {
                   </Tab.Content>
                 </Tab.Container>
               </Card.Body>
-              <Card.Footer className="text-center">
-                <p className="text-muted">Última actualización: Octubre 2024</p>
-              </Card.Footer>
             </Card>
           </Modal.Body>
           <Modal.Footer>
