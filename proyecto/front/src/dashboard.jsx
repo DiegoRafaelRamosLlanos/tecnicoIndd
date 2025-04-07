@@ -460,6 +460,7 @@ const Dashboard = ({ onLogout }) => {
       </button>
     </div>
 
+
       {activeSection === "addData" && (
         <div className="mb-4 p-4 border rounded bg-white shadow-sm">
           <h4 className="mb-4 text-primary">Registro de Nuevo Estudiante</h4>

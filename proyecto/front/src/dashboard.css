@@ -220,6 +220,7 @@ td[data-estado="Pendiente"] {
   font-weight: 600;
 }
 
+
 /* Estilos específicos para el formulario de agregar datos */
 .mb-4.p-4.border.rounded.bg-white {
   background: linear-gradient(to bottom, #ffffff, #f8f9fa);
