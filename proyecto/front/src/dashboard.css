@@ -220,6 +220,43 @@ td[data-estado="Pendiente"] {
   font-weight: 600;
 }
 
+/* Estilos específicos para el formulario de agregar datos */
+.mb-4.p-4.border.rounded.bg-white {
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05) !important;
+}
+
+.mb-4.p-4.border.rounded.bg-white h4 {
+  color: #2c3e50;
+  font-weight: 600;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.mb-4.p-4.border.rounded.bg-white .form-control {
+  height: 45px;
+  font-size: 0.95rem;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.mb-4.p-4.border.rounded.bg-white .form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.mb-4.p-4.border.rounded.bg-white select.form-control {
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #3498db 50%),
+                    linear-gradient(135deg, #3498db 50%, transparent 50%);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+                      calc(100% - 15px) calc(1em + 2px);
+  background-size: 5px 5px,
+                  5px 5px;
+  background-repeat: no-repeat;
+}
+
 /* Estilos para los campos de formulario */
 .form-control {
   border: 1px solid #ced4da;

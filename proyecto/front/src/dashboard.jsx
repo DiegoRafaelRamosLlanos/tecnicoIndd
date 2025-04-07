@@ -461,30 +461,64 @@ const Dashboard = ({ onLogout }) => {
     </div>
 
       {activeSection === "addData" && (
-        <div>
-          <div className="row g-0">
-            {Object.keys(newData).slice(0, 4).map((key, index) => (
-              <div className={`col-md-2 p-1`} key={key} style={{ display: "inline-block", width: "11%" }}>
-                {["tiene_hermanos", "enfermedad_cronica", "medicacion", "materias_adeuda"].includes(key) ? (
-                  <select className="form-control" name={key} value={newData[key]} onChange={handleNewDataChange}>
-                    <option value="">Seleccione {key.replace(/_/g, " ")}</option>
-                    <option value="Sí">Sí</option>
-                    <option value="No">No</option>
-                  </select>
-                ) : (
-                  <input
-                    type="text"
-                    className="form-control"
-                    name={key}
-                    value={newData[key]}
-                    onChange={handleNewDataChange}
-                    placeholder={key.replace(/_/g, " ")}
-                  />
-                )}
-              </div>
-            ))}
+        <div className="mb-4 p-4 border rounded bg-white shadow-sm">
+          <h4 className="mb-4 text-primary">Registro de Nuevo Estudiante</h4>
+          <div className="row g-3">
+            {/* Primera fila - Datos principales */}
+            <div className="col-md-3">
+              <input
+                type="text"
+                className="form-control"
+                name="foto"
+                value={newData.foto}
+                onChange={handleNewDataChange}
+                placeholder="URL de la foto"
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                type="text"
+                className="form-control"
+                name="DNI"
+                value={newData.DNI}
+                onChange={handleNewDataChange}
+                placeholder="DNI"
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                type="text"
+                className="form-control"
+                name="apellido"
+                value={newData.apellido}
+                onChange={handleNewDataChange}
+                placeholder="Apellido"
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                type="text"
+                className="form-control"
+                name="nombre"
+                value={newData.nombre}
+                onChange={handleNewDataChange}
+                placeholder="Nombre"
+              />
+            </div>
+            <div className="col-12 text-center mt-4">
+              <button 
+                className="btn btn-primary btn-lg px-5"
+                onClick={handleNewDataSubmit}
+                style={{
+                  background: 'linear-gradient(145deg, #3498db, #2c3e50)',
+                  border: 'none',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                }}
+              >
+                Registrar Estudiante
+              </button>
+            </div>
           </div>
-          <button className="btn btn-primary mt-1" onClick={handleNewDataSubmit}>Agregar Dato</button>
         </div>
       )}
 
