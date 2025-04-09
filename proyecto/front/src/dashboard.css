@@ -4,7 +4,12 @@
   margin: 0 auto; 
   padding: 20px; /* Bajamos un poco el botón cerrar sesión */
 }
-
+/* Agrega estos estilos para ajustar la posición vertical de la imagen */
+.modal-body .card-header img {
+  position: relative;
+  top: -35px;
+  margin-top: 20px; 
+}
 /* Nuevo estilo para los botones principales */
 .square-button {
   width: 180px !important;
