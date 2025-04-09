@@ -22,13 +22,16 @@ function Login({ onLogin }) {
     );
 
     if (user) {
-      onLogin(); 
-      navigate("/Dashboard"); 
+      onLogin();
+      if (user.username === "secretario") {
+        navigate("/secretaryDashboard"); // Cambiado para coincidir con la ruta en App.js
+      } else {
+        navigate("/dashboard");
+      }
     } else {
       setErrorMessage("Usuario o contraseña incorrectos.");
     }
   };
-
 
   return (
     <div className="background">
